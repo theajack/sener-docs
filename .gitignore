@@ -1,0 +1,10 @@
+node_modules
+nodejs
+# package-lock.json
+vuepress/.vuepress/secret.js
+helper/local
+coverage
+npm
+docs
+.DS_Store
+alins
