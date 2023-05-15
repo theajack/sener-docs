@@ -3,7 +3,7 @@
  * @Date: 2022-10-30 02:42:04
  * @Description: Coding something
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-05-12 00:17:41
+ * @LastEditTime: 2023-05-13 17:23:47
 -->
 <template>
     <div v-show='localCode!==""' class='code-runner' ref='runner'>
@@ -48,7 +48,7 @@
                 isEdit: false,
                 localCode: '',
                 localLang: '',
-                env: 'alins',
+                env: 'sener',
                 next: null,
             };
         },
@@ -113,29 +113,8 @@
                 }
                 this.initResult(next);
             },
-            initResult (next) {
+            initResult () {
                 return;
-                // if (!this.result) return;
-
-                // if (!this.codeResultEl) {
-                //     const div = document.createElement('div');
-                //     next.appendChild(div);
-                //     div.className = 'code-result';
-                //     const run = document.createElement('i');
-                //     run.className = 'ei-undo code-btn in-result';
-                //     run.title = '重新运行';
-                //     run.onclick = () => {this.run();};
-                //     div.appendChild(run);
-                //     this.codeResultEl = div;
-                // }
-
-                // const code = this.localCode.replace(/"#jx\-app"/g, '__DOM__')
-                //     .replace(/document\.getElementById\('jx\-app'\)/g, '__DOM__');
-                // try {
-                //     new Function('__DOM__', code)(this.codeResultEl);
-                // } catch (err) {
-                //     this.codeResultEl.innerHTML = `<span style="color: #f55">${err.toString()}</span>`;
-                // }
             },
             jsbox () {
                 jsbox.code(this.localCode, this.localLang, this.env);
@@ -144,12 +123,7 @@
                 this.$toast(copy(this.next.querySelector('code').innerText) ? '复制成功' : '复制失败');
             },
             transformCode (code) {
-                this.env = /from *['"]alins\-style['"]/.test(code) ? 'alins-style' : 'alins';
-                return code.replace(/\.mount\(\)/g, '.mount("#jx-app")')
-                    .replace(/import ({.*?}) from '(.*?)'/g, (str, $1, $2) => {
-                        const comment = ($2 === 'alins' && this.env !== 'alins') ? '/* cdn 引用时只需要引入alins-style即可*/\n' : '';
-                        return `${comment}const ${$1} = ${this.env === 'alins' ? 'Alins' : 'AlinsStyle'}`;
-                    });
+                return code;
             }
         }
     };

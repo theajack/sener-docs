@@ -1,15 +1,35 @@
 const {version} = require('../../package.json');
 const path = require('path');
 
+const docs = [
+    {title: '概念与基础', path: 'sener'},
+    {title: '中间件体系', path: 'middleware'},
+    {title: 'router中间件', path: 'router'},
+    {title: 'cookie中间件', path: 'cookie'},
+    {title: 'session中间件', path: 'session'},
+    {title: 'cors中间件', path: 'cors'},
+    {title: 'env中间件', path: 'env'},
+    {title: 'ip-monitor中间件', path: 'ip-monitor'},
+    {title: 'validator中间件', path: 'validator'},
+    {title: 'json中间件', path: 'json'},
+    {title: 'static中间件', path: 'static'},
+    {title: 'form中间件', path: 'form'},
+    {title: 'config中间件', path: 'config'},
+    {title: 'log中间件', path: 'log'},
+    {title: 'mysql中间件', path: 'mysql'},
+    {title: 'mongodb中间件', path: 'mongodb'},
+    {title: 'rpc中间件', path: 'rpc'},
+];
+
 module.exports = {
-    title: `Alins (v${version})`, // 标题
+    title: `Sener (v${version})`, // 标题
     configureWebpack: () => {
         const NODE_ENV = process.env.NODE_ENV;
         // 判断是否是生产环境
         if (NODE_ENV === 'production') {
             return {
                 output: {
-                    publicPath: 'https://cdn.jsdelivr.net/gh/alinsjs/docs-cn@gh-pages/'
+                    publicPath: 'https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/'
                     // publicPath: '/docs-cn/' // debug
                 },
                 resolve: {
@@ -30,18 +50,13 @@ module.exports = {
             };
         }
     },
-    description: 'Alins - All-in-JS Web FrameWork', // 描述
-    keywords: 'alins,all-in-js,css-in-js,web-framework',
+    description: 'Sener - 简洁高效、功能强大、高可扩展的nodejs web服务端框架', // 描述
+    keywords: 'sener,nodejs,web-framework',
     dest: './docs/', // 打包地址
-    base: '/docs-cn/', // gh-pages分支这里需要改成 / 因为 cnchar.js.org的配置
+    base: '/sener-docs/', // gh-pages分支这里需要改成 / 因为 cnchar.js.org的配置
     // 注入到当前页面的 HTML <head> 中的标签
     head: [
-        ['link', {rel: 'icon', href: 'https://shiyix.cn/alins.ico'}], // 增加一个自定义的 favicon
-        ['script', {src: `https://cdn.jsdelivr.net/npm/alins@${version}`}],
-        ['script', {src: `https://cdn.jsdelivr.net/npm/alins-style@${version}`}],
-        // dev use
-        // ['script', {src: `/alins.min.js`}],
-        // ['script', {src: `/alins-style.min.js`}],
+        ['link', {rel: 'icon', href: 'https://shiyix.cn/images/sener.ico'}], // 增加一个自定义的 favicon
     ],
     // dest: './dist', //打包位置
     port: 6868, // 端口号
@@ -61,13 +76,12 @@ module.exports = {
         nav: [
             {text: '主页', link: '/'}, // 内部链接 以docs为根目录
             // {text: '捐赠', link: '/guide/donate'},
-            // {text: 'GitHub', link: 'https://www.github.com/alinsjs/alins'},
-            {text: 'English', link: 'https://alinsjs.github.io/docs'},
+            // {text: 'GitHub', link: ''},
+            {text: 'English', link: 'https://theajack.github.io/sener-docs'},
             {
                 text: '起步',
                 items: [
                     {text: '简介', link: '/guide/intro'},
-                    {text: '示例程序', link: '/guide/sample'},
                     {text: '安装使用', link: '/guide/install'},
                     {text: '更新日志', link: '/guide/version'},
                     // {text: '捐赠', link: '/guide/donate'},
@@ -76,21 +90,18 @@ module.exports = {
             {
                 text: '文档',
                 // 这里是下拉列表展现形式。
-                items: [
-                    {text: 'dom构造', link: '/doc/dom'},
-                    {text: '事件', link: '/doc/on'},
-                    {text: '组件', link: '/doc/comp'},
-                    {text: '响应式数据', link: '/doc/react'},
-                    {text: '控制器', link: '/doc/controller'},
-                    {text: '生命周期', link: '/doc/life'},
-                    {text: 'css-in-js', link: '/doc/style'},
-                ],
+                items: docs.map(item => {
+                    return {
+                        text: item.title,
+                        link: '/doc/' + item.path,
+                    };
+                }),
             },
             {
                 text: 'GitHub',
                 items: [
-                    {text: 'Alins', link: 'https://www.github.com/alinsjs/alins'},
-                    {text: '文档', link: 'https://www.github.com/alinsjs/docs-cn'},
+                    {text: 'Sener', link: 'https://www.github.com/theajack/sener'},
+                    {text: '文档', link: 'https://www.github.com/theajack/sener-docs'},
                     {text: '作者', link: 'https://www.github.com/theajack'}, // 外部链接
                     // {text: 'Gitee地址', link: 'http://www.gitee.com/theajack'},
                     // {
@@ -116,19 +127,11 @@ module.exports = {
             // 如果你不需要文档版本功能，只需去掉2.0，1.0文件夹，将md文件直接放在components文件夹下
             '/doc/': [
                 {
-                    title: 'alins文档', // 必要的
+                    title: 'Sener文档', // 必要的
                     path: '', // 如果你不想'基础组件'可点击并有对应说明，就直接设为空，或者不写,并且nav的link也不要指向 '/components/2.0/'而是'/components/2.0/catButton'
                     collapsable: false, // 可选的, 右侧侧边栏是否展开,默认值是 true
                     // 如果组件很多时，建议将children配置单独放到一个js文件中，然后进行引入
-                    children: [
-                        {title: 'dom构造', path: 'dom'},
-                        {title: '事件', path: 'on'},
-                        {title: '组件', path: 'comp'},
-                        {title: '响应式数据', path: 'react'},
-                        {title: '控制器', path: 'controller'},
-                        {title: '生命周期', path: 'life'},
-                        {title: 'css-in-js', path: 'style'},
-                    ],
+                    children: docs,
                 },
             ],
             '/guide/': [
@@ -138,7 +141,6 @@ module.exports = {
                     collapsable: false,
                     children: [
                         {title: '简介', path: 'intro'},
-                        {title: '示例程序', path: 'sample'},
                         {title: '安装使用', path: 'install'},
                         {title: '更新日志', path: 'version'},
                         // {title: '捐赠', path: 'donate'},
@@ -161,7 +163,7 @@ module.exports = {
         // 官方图片放大组件 目前是所有img都可以点击放大。具体配置见https://v1.vuepress.vuejs.org/zh/plugin/official/plugin-medium-zoom.html
         ['@vuepress/medium-zoom', {selector: 'img'}],
         ['vuepress-plugin-tc-comment', {
-            appName: 'sener_docs', // create your own app name
+            appName: 'sener-docs', // create your own app name
             theme: 'dark',
         }]
     ],

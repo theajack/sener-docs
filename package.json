@@ -1,12 +1,12 @@
 {
-    "name": "alins",
-    "version": "0.0.12",
+    "name": "sener-docs",
+    "version": "0.0.15",
     "description": "All-in-js Web UI Framework, No jsx/template/vdom/css/html",
     "main": "index.html",
     "author": "theajack <theajack@qq.com>",
     "license": "MIT",
     "keywords": [
-        "cnchar",
+        "sener",
         "chinese-character",
         "chinese-pinyin",
         "chinese-character-strokes",

@@ -51,31 +51,63 @@
 
 Sener 是一个简洁高效、功能强大、高可扩展的nodejs web服务端框架
 
-Sener 的核心是一个简单的http服务器
+Sener 的核心是一个简单的http服务器，配合内置的请求和响应解析以及高度灵活的中间件系统，开发者可以基于Sener开发出功能丰富、性能强大的web应用程序
 
 [反馈问题](https://github.com/theajack/sener/issues/new) 
 
 ## 2. 特性
 
-1. 无vdom，监听数据精准修改到dom/textNode，dom节点复用
-2. alins-style css-in-js方案，原子属性/积木式组合/样式响应变更
-3. 良好的组件化支持
-4. 支持for,if,show,switch,model控制器
-5. 支持computed、watch
-6. 单向数据流 + 双向绑定
-7. 良好的ts支持
+1. 简单高效的架构，全ts编写，高度友好的ts声明支持
+2. 支持高度自定义和高可扩展的中间件体系，采用洋葱模型，丰富的路由hooks
 
-## 3. 包结构
+## 3. 中间件
 
-|     名称     | 描述 |   功能   | 支持版本 |
-| :----------: | :------------------------------: | :--------------------: | :--------------------: |
-|    alins    | alins主库 |  用于创建web应用程序   | 0.0.1 |
-|    alins-style    | css-in-js方案 |  不依赖于alins可以独立于alins使用  | 0.0.1 |
+| 名称 | 类型 | 功能 | 支持版本 |
+| :--: | :--: | :--: | :--: |
+| router | 内置 | 简单高可扩展的路由规则 | 0.0.3 |
+| cookie | 内置 | 用于cookie获取和注入 | 0.0.15 |
+| session | 内置 | 用于session获取和注入[依赖cookie] | 0.0.15 |
+| cors | 内置 | 支持跨域请求 | 0.0.3 |
+| env | 内置 | 用于注入和使用环境变量 | 0.0.15 |
+| ip-monitor | 内置 | 用于对请求ip进行风控拦截 | 0.0.15 |
+| validator | 内置 | 支持验证入参和参数类型定义 | 0.0.15 |
+| json | 独立 | 支持json文件用于数据存储 | 0.0.4 |
+| static | 独立 | 支持静态文件目录 | 0.0.14 |
+| form | 独立 | 支持formdata解析和文件上传 | 0.0.11 |
+| config | 独立 | 支持高度灵活的参数配置和动态变更与监听 | 0.0.11 |
+| log | 独立 | 支持灵活的日志体系，支持日志级别控制 | 0.0.11 |
+| mysql | 独立 | 支持mysql连接 | 0.0.12 |
+| mongodb | 独立 | 支持mongodb连接，collocation的封装 | 0.0.12 |
+| rpc | 独立 | 远程调用支持，支持客户端和服务端使用，支持注入请求的x-trace-id | 0.0.13 |
 
-除此之外 Alins还包含两个工具库，一般不需要开发者引入
+内置中间件为sener包中自带的中间 但是使用时也需要手动引入
 
-1. alins-reactive: alins 和 alins-style 共同依赖的响应式库
-2. alins-utils: 其他三个包依赖的工具库
+使用独立中间需要安装对应的独立包
+
+## 4. 基础使用
+
+<code-runner title='基础使用'/>
+
+```js
+const router = new Router({
+    '/demo': ({ query }) => {
+        // or: 'get:/demo': ({ query }) => { // get: prefix can be ignored
+        query.message = 'from get';
+        return { data: query };
+        // Custom headers or statusCode
+        // return { data: query, headers: {}, statusCode: 200  };
+    },
+    'post:/demo': async ({ body }) => {
+        body.message = 'from post'
+        return { data: body };
+    },
+});
+
+new Sener({
+  port: 9000,
+  middlewares: [router],
+});
+```
 
 <div>
     <star></star>

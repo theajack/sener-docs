@@ -2,98 +2,66 @@
  * @Author: chenzhongsheng
  * @Date: 2022-10-30 02:42:04
  * @Description: Coding something
- * @LastEditors: chenzhongsheng
- * @LastEditTime: 2022-11-05 20:56:40
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-05-13 17:04:03
 -->
 
 ## 1. npm安装
 
 ```
-npm i alins
+npm i sener
 ```
 
-<code-runner title='只使用alins'></code-runner>
+<code-runner title='只使用sener'></code-runner>
 
 ```js
-import {$, div, click} from 'alins';
-const mes = $('Hello World');
-div($`${mes}!`, click(()=>{mes.value+='!';})).mount();
+import { Sener } from 'sener';
+
+new Sener({
+  port: 9000,
+  middlewares: [],
+});
 ```
 
-### 独立使用 alins-style
+## 2. 安装使用中间件
 
 ```
-npm i alins-style
+npm i sener-json sener-static sener-form sener-config sener-log sener-mysql sener-mongodb sener-rpc
 ```
 
-<code-runner title='alins-style独立使用'></code-runner>
+<code-runner title='中间件使用'></code-runner>
 
 ```js
-import {$, style} from 'alins-style';
-const color = $('#fff');
-const div = document.createElement('div');
-div.innerText = 'Click to change color';
-div.onclick = () => {color.value = '#f44';};
-style({color}).mount(div);
+// 内置中间件
+import { 
+  Sener, Router, Cookie, Session,
+  Cors, Env, IpMonitor, Validator 
+} from 'sener';
+// 独立中间件
+import { Json } from 'sener-json';
+import { Static } from 'sener-static';
+import { Form } from 'sener-form';
+import { Config } from 'sener-config';
+import { Log } from 'sener-log';
+import { Mysql } from 'sener-mysql';
+import { Mongo } from 'sener-mongodb';
+import { RPC } from 'sener-rpc';
 
-document.getElementById('jx-app').appendChild(div);
-```
-
-### alins 和 alins-style 一起使用
-
-```
-npm i alins alins-style
-```
-
-<code-runner title='alins alins-style一起使用'></code-runner>
-
-```js
-import {$, div, click} from 'alins';
-import {style} from 'alins-style';
-
-const color = $('#fff');
-
-div($`Click to change color: ${color}`, 
-  style({color}),
-  click(()=>{color.value = '#f44';}),
-).mount();
-```
-
-## 2. CDN引用
-
-### alins
-
-<code-runner title='CDN 使用 alins' :result="false"></code-runner>
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/alins"></script>
-<script>
-  Alins.div('Hello World!').mount();
-</script>
-```
-
-### alins-style
-
-使用 cdn 方式引入alins-style，会默认包含alins代码，若只希望独立使用 style，请参考下面的 alins-style-standalone
-
-<code-runner title='CDN alins-style' :result="false"></code-runner>
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/alins-style"></script>
-<script>
-  console.log(AlinsStyle, AlinsStyle.div);
-</script>
-```
-
-### alins-style-standalone
-
-独立使用alins-style - alins-style.standalone.min.js
-
-<code-runner title='CDN alins-style standalone' :result="false"></code-runner>
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/alins-style/dist/alins-style.standalone.min.js"></script>
-<script>
-  console.log(AlinsStyle);
-</script>
+// ! 具体配置请参考对应的文档章节
+new Sener({
+  port: 9000,
+  middlewares: [
+    new Router({}), // 建议router放在middleware第一个
+    new Cookie(), // cookie 需要在 session 之前
+    new Session(),
+    new Json(),
+    new Static(),
+    new Form(),
+    new Config(),
+    new Log(),
+    new Mysql(),
+    new Mongo(),
+    new RPC(),
+  ],
+});
 ```

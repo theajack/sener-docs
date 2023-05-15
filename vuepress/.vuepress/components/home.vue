@@ -50,13 +50,6 @@
             };
         },
         mounted () {
-            if (window.Alins) {
-                this.loaded = true;
-            } else {
-                window.addEventListener('load', () => {
-                    this.loaded = false;
-                });
-            }
         },
         methods: {
             start () {

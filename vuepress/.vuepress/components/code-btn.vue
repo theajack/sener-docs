@@ -2,8 +2,8 @@
  * @Author: chenzhongsheng
  * @Date: 2022-11-04 20:16:21
  * @Description: Coding something
- * @LastEditors: chenzhongsheng
- * @LastEditTime: 2022-11-07 21:46:19
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-05-13 17:20:45
 -->
 <template>
     <el-button class='code-btn-w'
@@ -13,8 +13,6 @@
 </template>
 
 <script>
-    import initJSBox from '../../src/jsbox';
-    let jsbox = null;
     export default {
         props: {
             text: {
@@ -31,27 +29,9 @@
             }
         },
         mounted () {
-            jsbox = initJSBox();
         },
         methods: {
             run () {
-                if (!this.url) {
-                    this.$toast('url 错误');
-                    return;
-                }
-                let url = '';
-                if (this.url[0] === '/') {
-                    url = `${location.protocol}://${location.host}${this.url}`;
-                } else if (this.url.indexOf('http') === 0) {
-                    url = this.url;
-                } else if (this.url[0] === '@') {
-                    jsbox.openSample(this.url.substring(1));
-                    return;
-                    // url = `https://theajack.github.io/jsbox?github=alinsjs.docs.samples/${}.js`;
-                } else {
-                    url = `https://theajack.github.io/jsbox?github=${this.url}`;
-                }
-                jsbox.openUrl(url);
             }
         }
     };

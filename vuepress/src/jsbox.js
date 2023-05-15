@@ -43,7 +43,7 @@ function main () {
         mask.style.display = 'none';
         document.body.style.overflow = 'auto';
     }
-    function code (_code = '', lang = 'javascript', env = 'alins') { // alins | alins-style
+    function code (_code = '', lang = 'javascript', env = 'sener') {
         if (jsbox._code !== _code) {
             jsbox._code = _code;
             setUrl(`${getUrl()}&env=${env}&code=${encodeURIComponent(_code)}&lang=${lang}`);

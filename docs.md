@@ -4,8 +4,7 @@
  * @Description: Coding something
 -->
 
-
-1. alins-doms doms div func-return children attr cls
+1. sener-doms doms div func-return children attr cls
 2. reactive - define use computed watch
 3. controller - for if switch show
 4. components - use props slots events
