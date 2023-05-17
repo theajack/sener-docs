@@ -3,7 +3,7 @@
  * @Date: 2022-11-05 10:51:06
  * @Description: Coding something
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-05-14 13:26:54
+ * @LastEditTime: 2023-05-17 08:00:57
 -->
 
 # 概念与基础
@@ -86,12 +86,55 @@ interface ISenerContext {
     ...ISenerHelper; // 该参数为中间件自定义的helper 后续自定义中间件章节中会介绍到
 
     // 工具函数
-    send404: (errorMessage?: string, header?: IJson<string>) => void; // 响应返回404
-    sendJson: (data: IJson, statusCode?: number, header?: IJson<string>) => void; // 响应返回一个json
-    sendText: (text: string, statusCode?: number, header?: IJson<string>) => void; // 响应返回plaintext
-    sendHtml: (html: string, header?: IJson<string>) => void; // 响应返回html
-    sendResponse: (data: Partial<ISenerResponse>) => void; // 自定义响应返回
+    send404: (errorMessage?: string, header?: IJson<string>) => false; // 响应返回404
+    sendJson: (data: IJson, statusCode?: number, header?: IJson<string>) => false; // 响应返回一个json
+    sendText: (text: string, statusCode?: number, header?: IJson<string>) => false; // 响应返回plaintext
+    sendHtml: (html: string, header?: IJson<string>) => false; // 响应返回html
+    sendResponse: (data: Partial<ISenerResponse>) => false; // 自定义响应返回
 }
 ```
 
+## sendXX工具方法
 
+从上面小节的声明中可以看出，context 中含有五个工具方法
+
+这五个方法的作用是提前发送请求响应，终止后续流程。可以在自定义中间件或router中使用，详细使用可以参考 router中间件
+
+## 其他Api
+
+### 1. use
+
+use 用于动态添加一个中间件
+
+```js
+const sener = new Sener();
+sener.use(customMiddleware);
+```
+
+### 2. remove
+
+remove 用于动态移除一个中间件
+
+```js
+const sener = new Sener();
+sener.remove(customMiddleware);
+```
+
+### 3. Dir
+
+Dir 是一个静态属性 用于获取或设置Sener的数据根目录
+
+默认值为 homedir() + './sener-data'
+
+```js
+Sener.Dir;
+Sener.Dir = '/custom-dir';
+```
+
+### 3. Version
+
+Version 是一个静态属性 用于获取版本号
+
+```js
+Sener.Version;
+```

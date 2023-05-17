@@ -86,9 +86,8 @@ Sener 的核心是一个简单的http服务器，配合内置的请求和响应�
 
 ## 4. 基础使用
 
-<code-runner title='基础使用'/>
-
 ```js
+import { Sener, Router } from 'sener';
 const router = new Router({
     '/demo': ({ query }) => {
         // or: 'get:/demo': ({ query }) => { // get: prefix can be ignored
@@ -108,6 +107,14 @@ new Sener({
   middlewares: [router],
 });
 ```
+
+如果是nodejs直接使用的话，请使用 cjs 规范引用
+
+```js
+const { Sener, Router } = require('sener');
+```
+
+后面文档中都是用esm规范，端口都是用默认的9000，如需要cjs请自行修改
 
 <div>
     <star></star>

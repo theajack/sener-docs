@@ -16,7 +16,7 @@ const router = new Router({
 });
 
 new Sener({
-  middlewares: [router, new Cors()],
+    middlewares: [router, new Cors()],
 });
 ```
 
@@ -39,7 +39,6 @@ interface ICorsOptions {
 ```
 
 与header的对应关系如下
-
 
 ```js
 const Names = {
