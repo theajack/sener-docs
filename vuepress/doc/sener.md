@@ -3,7 +3,7 @@
  * @Date: 2022-11-05 10:51:06
  * @Description: Coding something
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-05-17 08:00:57
+ * @LastEditTime: 2023-05-21 12:46:37
 -->
 
 # 概念与基础
@@ -76,6 +76,9 @@ interface ISenerContext {
     request: IncomingMessage; // http模块原生的request对象
     response: IResponse;  // http模块原生的response对象
     env: ISenerEnv & IJson; // env中间件注入的环境变量
+    responded: boolean; // 标记是否已经构造了响应
+    isOptions: boolean; // 标记是否是options请求
+    returned: boolean; // 标记是否已经发送了响应
 
     // 响应返回
     data: T, // 响应返回的数据
@@ -86,19 +89,24 @@ interface ISenerContext {
     ...ISenerHelper; // 该参数为中间件自定义的helper 后续自定义中间件章节中会介绍到
 
     // 工具函数
-    send404: (errorMessage?: string, header?: IJson<string>) => false; // 响应返回404
-    sendJson: (data: IJson, statusCode?: number, header?: IJson<string>) => false; // 响应返回一个json
-    sendText: (text: string, statusCode?: number, header?: IJson<string>) => false; // 响应返回plaintext
-    sendHtml: (html: string, header?: IJson<string>) => false; // 响应返回html
-    sendResponse: (data: Partial<ISenerResponse>) => false; // 自定义响应返回
+    response404: (errorMessage?: string, header?: IJson<string>) => ISenerResponse; // 构造404响应
+    responseJson: (data: IJson, statusCode?: number, header?: IJson<string>) => ISenerResponse; // 构造json响应
+    responseText: (text: string, statusCode?: number, header?: IJson<string>) => ISenerResponse; // 构造文本响应
+    responseHtml: (html: string, header?: IJson<string>) => ISenerResponse; // 构造html响应
+    responseData: (data: Partial<ISenerResponse>) => ISenerResponse; // 构造通用响应
+    markReturned: () => void; // 标记为已提前返回响应
 }
 ```
 
-## sendXX工具方法
+## 工具方法
 
-从上面小节的声明中可以看出，context 中含有五个工具方法
+从上面小节的声明中可以看出，context 中含有六个工具方法
 
-这五个方法的作用是提前发送请求响应，终止后续流程。可以在自定义中间件或router中使用，详细使用可以参考 router中间件
+markReturned 工具方法用于在通过原生 response 已经发送响应到客户端之后，标记已发送状态，这就可以跳过后续不需要的中间件和返回响应。
+
+其他五个 responseXXX 方法为构造响应合并到 context 中，本身并不会直接返回响应
+
+工具方法可以在自定义中间件或router中使用，详细使用可以参考 router中间件
 
 ## 其他Api
 

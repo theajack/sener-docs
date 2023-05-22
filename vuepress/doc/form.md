@@ -41,7 +41,7 @@ new Sener({
 
 ## 构造参数
 
-json中间件支持以下配置：
+form 中间件支持以下配置：
 
 ```ts
 interface IJsonOptions {
@@ -49,3 +49,48 @@ interface IJsonOptions {
 }
 ```
 
+## form context
+
+form 中间件自定了两个 context
+
+```ts
+interface ISenerHelper {
+    files: Files; // files 表示获取到的 formData 中的文件map对象
+    formData: IJson; // formData 表示 formData 中的其他数据
+}
+```
+
+以下是一个简单示例：
+
+假如客户端上传的body是一个如下的formdata
+
+```
+FormData({
+    key: 'test', // 模拟一个普通的值
+    img: File, // 模拟上传一张图片
+})
+```
+
+```js
+new Router({
+    'post:/upload': ({ formData, files }) => {
+        // formData => {key: 'test'}
+        // files => {img: SenerFile}
+        files = transformFilePath(files); // 将本地目录转换成公网url
+        return success({ formData, files }, '文件上传成功');
+    }
+});
+```
+
+以下为 SenerFile 对象的结构
+
+```ts
+interface SenerFile {
+    size: number; // 文件大小 单位为 byte
+    filepath: string; // 文件的本地目录：如 /public/upload/2023_05/xxxx
+    mimetype: string; // 文件 mimetype 如 image/png
+    mtime: string; // 文件 mtime "2023-05-21T10:21:32.060Z"
+    newFilename: string; // 新文件名
+    originalFilename: string; // 原始文件名
+}
+```

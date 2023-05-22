@@ -55,7 +55,7 @@ json中间件支持以下配置：
 
 ```ts
 interface IJsonOptions {
-    dir?: string, // dir 用于设置json文件的保存目录，默认为 'json'
+    dir?: string, // dir 用于设置json文件的保存目录，默认为 'json', 即为 {Sener.Dir}/json
     format?: boolean, // 是否格式化Json内容，默认为false
 }
 ```
