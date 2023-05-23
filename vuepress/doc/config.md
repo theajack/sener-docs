@@ -91,10 +91,64 @@ new Config({
 
 ## 自定义的SenerContext
 
-### config
+config 中间件只有一个Context属性，即为 config
+
+可以使用属性直接获取或者赋值，也可以通过 $onchange 方法监听配置文件的变更
+
+```js
+const router = new Router({
+    '/demo': ({ config }) => {
+        console.log(config.level); // 获取level配置
+        config.level = 3;
+        config.$onchange = (key, value, prev) => {
+            console.log(key, value, prev);
+        }
+        return { data: {success: true} };
+    },
+});
+```
+
+## API
+
+config-middleware 对象上具有如下api可以直接使用
+
+### data
+
+data 等价于 SenerContext.config
+
+```js
+const config = new Config();
+config.data.$onchange(()=>{});
+config.data.level = 1;
+```
 
 ### writeConfig
 
+writeConfig 等价于 config.data.xxx = xxx;
+
+```js
+const config = new Config();
+config.writeConfig('age', 1);
+```
+
 ### onConfigChange
 
-## API
+onConfigChange 等价于 config.data.$onchange
+
+```js
+const config = new Config();
+config.onConfigChange(()=>{});
+```
+
+## ts类型声明
+
+如果要对 config 的数据进行类型声明，可以使用如下代码进行扩展：
+
+```ts
+declare module 'sener' {
+    interface IConfigData {
+        level: number,
+        age: number,
+    }
+}
+```
