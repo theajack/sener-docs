@@ -157,7 +157,6 @@ export class LoginCheck extends MiddleWare {
 使用以下声明可以扩展ISenerContext接口
 
 ```ts
-// tood 优化
 declare module 'sener' {
   interface ISenerHelper {
     customArrtibute: {},
