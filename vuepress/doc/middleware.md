@@ -82,7 +82,7 @@ enter 返回值类型为 Partial&lt;ISenerContext>
 
 leave hook 在请求响应被发送到客户端之后执行，一般用于销毁中间件的某些状态，比如断开数据库连接等。leave中间件不需要有任何返回值
 
-> 注：一般建议在 enter hook中处理与响应相关的context，及 data，statusCode，headers，success 四个属性，包裹调用context的工具方法。建议在init hook中操作或自定义其他context。
+> 注：一般建议在 enter hook中处理与响应相关的context，即 data，statusCode，headers，success 四个属性，包裹调用context的工具方法。建议在init hook中操作或自定义其他context。
 
 ## 自定义中间件
 

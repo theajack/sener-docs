@@ -51,7 +51,7 @@ interface IJsonOptions {
 
 ## form context
 
-form 中间件自定了两个 context
+form 中间件指定了两个 context
 
 ```ts
 interface ISenerHelper {

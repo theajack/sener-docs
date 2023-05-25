@@ -22,8 +22,6 @@ new Static();
 
 static中间件用于建立静态资源服务，使用方式如下：
 
-注：static路由必须放在router首位，否则会被router拦截返回404，与router共同使用时，建议 static放在第一位，router放在第二位
-
 ```js
 import { Sener } from 'sener';
 import { Static } from 'sener-static';
@@ -35,7 +33,6 @@ new Sener({
 上面的代码会在执行目录的public文件夹作为静态资源根目录
 
 如：访问 localhost:9000/image.jpg 就可以访问到 ./public/image.jpg 文件
-
 
 ## 构造参数
 

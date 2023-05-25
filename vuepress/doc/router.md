@@ -34,7 +34,7 @@ new Sener({
 });
 ```
 
-需要注意的是 router 中间件一般建议放在第一个位置，拦截到不存在的路由时会返回404响应。（如果使用了static中间件，static需要放在首位，router放在第二位）
+需要注意的是 router 中间件一般建议放在第一个位置
 
 也可以使用json声明，以方便按模块定义路由规则，如果使用ts可以搭配接口使用
 
@@ -74,7 +74,7 @@ const router = new Router({
 });
 ```
 
-注：当路由映射的值为对象是，key上不需要加入meta部分
+注：当路由映射的值为对象时，key上不需要加入meta部分
 
 2. Method 为路由方法，也是可选参数，默认值为get，需要使用`:`分割
 
@@ -212,9 +212,9 @@ const router = new Router({
 });
 ```
 
-2. context中的 sendXX 方法
+2. responseXX 方法
 
-路由handler中可以使用 sendXX 方法提前返回响应，sendXX 方法的返回值均为false，直接在路由中返回即可
+路由handler中可以使用 responseXX 方法标识请求已经被响应，且返回值将响应结果注入 context 中。
 
 ```js
 import {Router, error, success} from 'sener'
@@ -222,9 +222,41 @@ const router = new Router({
     '/test': ({send404}) => {
         const isLogin = something();
         if(!isLogin) {
-            return send404();
+            return responseXX();
         }
         return success({data});
     },
 });
+```
+
+后续中间件遇到已被响应的标识之后会跳过hook，如果要处理已经标识过的请求，可以将 acceptResponded 值设置为 true。
+
+```js
+class CustomMiddle extends MiddleWare {
+    acceptResponded = true;
+    enter(ctx){
+    }
+}
+```
+
+3. markReturned 方法
+
+如果第三方中间件已经自行使用 response 对象进行了发送请求响应，那么后续 sener 再次发送或者设置header会打印一个错误。
+
+为了防止这种情况，可以使用 markReturned 方法表示请求已提前返回响应，不需要由sener统一发送响应。同时后续中间件遇到已被发送响应的标识之后会跳过hook，如果要处理已经标识过的请求，可以将 acceptReturned 值设置为 true。
+
+```js
+class CustomMiddle1 extends MiddleWare {
+
+    enter({response, markReturned}){
+        response.write('xxx');
+        response.end();
+        markReturned();
+    }
+}
+class CustomMiddle2 extends MiddleWare {
+    acceptReturned = true;
+    enter({response, markReturned}){
+    }
+}
 ```
