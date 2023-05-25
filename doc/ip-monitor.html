@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sener (v0.0.15)</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="https://shiyix.cn/images/sener.ico">
+    <meta name="description" content="Sener - 简洁高效、功能强大、高可扩展的nodejs web服务端框架">
+    
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/css/0.styles.9bfcdf17.css" as="style"><link rel="preload" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/app.7b98ac39.js" as="script"><link rel="preload" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/2.438bba12.js" as="script"><link rel="preload" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/18.7e220489.js" as="script"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/10.c272f437.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/11.b1107336.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/12.84f225c7.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/13.d3d5b11c.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/14.bf8566f5.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/15.d15ebccc.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/16.bcfceef4.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/17.fe527687.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/19.900e375e.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/20.aa3355a2.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/21.b920205e.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/22.a42071d0.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/23.df12fdb1.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/24.543cee84.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/25.44c507de.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/26.5b1d0c59.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/27.c9a84b22.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/28.446172ce.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/29.e90680e7.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/3.a6f42ddd.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/30.87f5c37d.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/31.c22ff4c4.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/32.54dc1148.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/33.1362e94d.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/34.8b6a68d0.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/4.aceaaf17.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/5.2ffad58b.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/6.b02a81c9.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/7.8658debc.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/8.18def8f1.js"><link rel="prefetch" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/9.539574a3.js">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/css/0.styles.9bfcdf17.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/sener-docs/" class="home-link router-link-active"><!----> <span class="site-name">Sener (v0.0.15)</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/sener-docs/" class="nav-link">
+  主页
+</a></div><div class="nav-item"><a href="https://theajack.github.io/sener-docs" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  English
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="起步" class="dropdown-title"><span class="title">起步</span> <span class="arrow down"></span></button> <button type="button" aria-label="起步" class="mobile-dropdown-title"><span class="title">起步</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/sener-docs/guide/intro.html" class="nav-link">
+  简介
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/guide/install.html" class="nav-link">
+  安装使用
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/guide/version.html" class="nav-link">
+  更新日志
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="文档" class="dropdown-title"><span class="title">文档</span> <span class="arrow down"></span></button> <button type="button" aria-label="文档" class="mobile-dropdown-title"><span class="title">文档</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/sener-docs/doc/sener.html" class="nav-link">
+  概念与基础
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/middleware.html" class="nav-link">
+  中间件体系
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/router.html" class="nav-link">
+  router: 路由
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/cookie.html" class="nav-link">
+  cookie
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/session.html" class="nav-link">
+  session
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/cors.html" class="nav-link">
+  cors: 跨域支持
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/env.html" class="nav-link">
+  env: 环境变量
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/ip-monitor.html" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  ip-monitor: ip风控
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/validator.html" class="nav-link">
+  validator: 数据校验
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/json.html" class="nav-link">
+  json: json数据库
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/static.html" class="nav-link">
+  static: 静态资源
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/form.html" class="nav-link">
+  form: formdata&amp;文件
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/config.html" class="nav-link">
+  config: 动态配置
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/log.html" class="nav-link">
+  log: 日志
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/mysql.html" class="nav-link">
+  mysql
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/mongodb.html" class="nav-link">
+  mongodb
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/rpc.html" class="nav-link">
+  rpc: 远程调用
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="GitHub" class="dropdown-title"><span class="title">GitHub</span> <span class="arrow down"></span></button> <button type="button" aria-label="GitHub" class="mobile-dropdown-title"><span class="title">GitHub</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://www.github.com/theajack/sener" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Sener
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://www.github.com/theajack/sener-docs" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  文档
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://www.github.com/theajack" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  作者
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/sener-docs/" class="nav-link">
+  主页
+</a></div><div class="nav-item"><a href="https://theajack.github.io/sener-docs" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  English
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="起步" class="dropdown-title"><span class="title">起步</span> <span class="arrow down"></span></button> <button type="button" aria-label="起步" class="mobile-dropdown-title"><span class="title">起步</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/sener-docs/guide/intro.html" class="nav-link">
+  简介
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/guide/install.html" class="nav-link">
+  安装使用
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/guide/version.html" class="nav-link">
+  更新日志
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="文档" class="dropdown-title"><span class="title">文档</span> <span class="arrow down"></span></button> <button type="button" aria-label="文档" class="mobile-dropdown-title"><span class="title">文档</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/sener-docs/doc/sener.html" class="nav-link">
+  概念与基础
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/middleware.html" class="nav-link">
+  中间件体系
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/router.html" class="nav-link">
+  router: 路由
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/cookie.html" class="nav-link">
+  cookie
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/session.html" class="nav-link">
+  session
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/cors.html" class="nav-link">
+  cors: 跨域支持
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/env.html" class="nav-link">
+  env: 环境变量
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/ip-monitor.html" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  ip-monitor: ip风控
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/validator.html" class="nav-link">
+  validator: 数据校验
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/json.html" class="nav-link">
+  json: json数据库
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/static.html" class="nav-link">
+  static: 静态资源
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/form.html" class="nav-link">
+  form: formdata&amp;文件
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/config.html" class="nav-link">
+  config: 动态配置
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/log.html" class="nav-link">
+  log: 日志
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/mysql.html" class="nav-link">
+  mysql
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/mongodb.html" class="nav-link">
+  mongodb
+</a></li><li class="dropdown-item"><!----> <a href="/sener-docs/doc/rpc.html" class="nav-link">
+  rpc: 远程调用
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="GitHub" class="dropdown-title"><span class="title">GitHub</span> <span class="arrow down"></span></button> <button type="button" aria-label="GitHub" class="mobile-dropdown-title"><span class="title">GitHub</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://www.github.com/theajack/sener" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Sener
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://www.github.com/theajack/sener-docs" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  文档
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://www.github.com/theajack" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  作者
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>Sener文档</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/sener-docs/doc/sener.html" class="sidebar-link">概念与基础</a></li><li><a href="/sener-docs/doc/middleware.html" class="sidebar-link">中间件体系</a></li><li><a href="/sener-docs/doc/router.html" class="sidebar-link">router: 路由</a></li><li><a href="/sener-docs/doc/cookie.html" class="sidebar-link">cookie</a></li><li><a href="/sener-docs/doc/session.html" class="sidebar-link">session</a></li><li><a href="/sener-docs/doc/cors.html" class="sidebar-link">cors: 跨域支持</a></li><li><a href="/sener-docs/doc/env.html" class="sidebar-link">env: 环境变量</a></li><li><a href="/sener-docs/doc/ip-monitor.html" aria-current="page" class="active sidebar-link">ip-monitor: ip风控</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/sener-docs/doc/ip-monitor.html#基础使用" class="sidebar-link">基础使用</a></li><li class="sidebar-sub-header"><a href="/sener-docs/doc/ip-monitor.html#配置风控策略" class="sidebar-link">配置风控策略</a></li><li class="sidebar-sub-header"><a href="/sener-docs/doc/ip-monitor.html#自定义风控策略" class="sidebar-link">自定义风控策略</a></li><li class="sidebar-sub-header"><a href="/sener-docs/doc/ip-monitor.html#自定义处理策略" class="sidebar-link">自定义处理策略</a></li></ul></li><li><a href="/sener-docs/doc/validator.html" class="sidebar-link">validator: 数据校验</a></li><li><a href="/sener-docs/doc/json.html" class="sidebar-link">json: json数据库</a></li><li><a href="/sener-docs/doc/static.html" class="sidebar-link">static: 静态资源</a></li><li><a href="/sener-docs/doc/form.html" class="sidebar-link">form: formdata&amp;文件</a></li><li><a href="/sener-docs/doc/config.html" class="sidebar-link">config: 动态配置</a></li><li><a href="/sener-docs/doc/log.html" class="sidebar-link">log: 日志</a></li><li><a href="/sener-docs/doc/mysql.html" class="sidebar-link">mysql</a></li><li><a href="/sener-docs/doc/mongodb.html" class="sidebar-link">mongodb</a></li><li><a href="/sener-docs/doc/rpc.html" class="sidebar-link">rpc: 远程调用</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="ip-monitor中间件"><a href="#ip-monitor中间件" class="header-anchor">#</a> IP-Monitor中间件</h1> <h2 id="基础使用"><a href="#基础使用" class="header-anchor">#</a> 基础使用</h2> <p>IP-Monitor中间件用于识别相同ip地址的频繁访问，从而对可疑IP进行风控。</p> <p>该中间件支持设置识别模式、检测回调和处理回调，基本使用如下：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">import</span> <span class="token punctuation">{</span>Sener<span class="token punctuation">,</span> IpMonitor<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'sener'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">new</span> <span class="token class-name">Sener</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">middlewares</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token keyword">new</span> <span class="token class-name">IpMonitor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>IpMonitor 接收如下类型的参数：</p> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">interface</span> <span class="token class-name">IIpMonitorOptions</span> <span class="token punctuation">{</span>
+    range<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">;</span> <span class="token comment">// 表示检测访问的时间周期 单位为s</span>
+    times<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">;</span> <span class="token comment">// 表示检测到相同ip访问的次数</span>
+    oncheck<span class="token operator">?</span><span class="token operator">:</span> <span class="token punctuation">(</span>ctx<span class="token operator">:</span> ISenerContext<span class="token punctuation">,</span> <span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token builtin">boolean</span><span class="token punctuation">;</span> <span class="token comment">// 自定义检测策略</span>
+    handler<span class="token operator">?</span><span class="token operator">:</span> <span class="token punctuation">(</span>ctx<span class="token operator">:</span> ISenerContext<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> IHookReturn<span class="token punctuation">;</span> <span class="token comment">// 自定义检测命中后的处理逻辑</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h2 id="配置风控策略"><a href="#配置风控策略" class="header-anchor">#</a> 配置风控策略</h2> <p>IP-Monitor 默认的风控策略是 10s 内访问 30 次被认为是高频访问，对改ip的所有请求直接返回404，开发者可以通过参数调整这两个数值。</p> <p>以下代码表示当相同ip 30s内连续访问100次是被认为是高频访问：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">import</span> <span class="token punctuation">{</span>IpMonitor<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'sener'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">new</span> <span class="token class-name">IpMonitor</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">range</span><span class="token operator">:</span> <span class="token number">30</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">times</span><span class="token operator">:</span> <span class="token number">100</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+</code></pre></div><h2 id="自定义风控策略"><a href="#自定义风控策略" class="header-anchor">#</a> 自定义风控策略</h2> <p>开发者可以通过 oncheck 属性自定义风控策略</p> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">import</span> <span class="token punctuation">{</span>IpMonitor<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'sener'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">new</span> <span class="token class-name">IpMonitor</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token function">oncheck</span><span class="token punctuation">(</span><span class="token punctuation">{</span>ip<span class="token punctuation">,</span> url<span class="token punctuation">}</span><span class="token operator">:</span> ISenerContext<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token comment">// 此处仅仅演示一个简单的例子</span>
+        <span class="token keyword">return</span> url <span class="token operator">===</span> <span class="token string">'/demo'</span> <span class="token operator">&amp;&amp;</span> ip <span class="token operator">===</span> <span class="token string">'xx.xx.xx.xx'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+</code></pre></div><p>注：开启oncheck参数之后，默认策略将失效，range和times参数也将失效</p> <h2 id="自定义处理策略"><a href="#自定义处理策略" class="header-anchor">#</a> 自定义处理策略</h2> <p>IP-Monitor 的默认策略是检测到高频访问之后就返回404，开发者可以通过handler参数自定义处理策略</p> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">import</span> <span class="token punctuation">{</span>IpMonitor<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'sener'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">new</span> <span class="token class-name">IpMonitor</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token function">handler</span><span class="token punctuation">(</span><span class="token punctuation">{</span>ip<span class="token punctuation">,</span> send404<span class="token punctuation">}</span><span class="token operator">:</span> ISenerContext<span class="token punctuation">)</span><span class="token operator">:</span> IHookReturn<span class="token punctuation">{</span>
+        <span class="token function">saveRiskIP</span><span class="token punctuation">(</span>ip<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 做一些自定义的处理</span>
+        <span class="token keyword">return</span> <span class="token function">send404</span><span class="token punctuation">(</span><span class="token string">'自定义错误信息'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 也可以返回一个正常的返回值 具体可以参考router中间件的返回</span>
+        <span class="token comment">// return success({data: 'xxx'}) // success 为工具方法 可以参考前文</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">文档更新时间:</span> <span class="time">5/17/2023, 1:46:46 AM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/sener-docs/doc/env.html" class="prev">
+        env: 环境变量
+      </a></span> <span class="next"><a href="/sener-docs/doc/validator.html">
+        validator: 数据校验
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----><div></div></div></div>
+    <script src="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/app.7b98ac39.js" defer></script><script src="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/2.438bba12.js" defer></script><script src="https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/assets/js/18.7e220489.js" defer></script>
+  </body>
+</html>
