@@ -1,13 +1,13 @@
 <!--
- * @Author: chenzhongsheng
- * @Date: 2023-05-14 14:49:08
- * @Description: Coding something
+  * @Author: chenzhongsheng
+  * @Date: 2023-05-14 14:49:08
+  * @Description: Coding something
 -->
-# config中间件
+# config middleware
 
-## 安装使用
+## Install and use
 
-config中间件为独立中间件，需要单独安装使用
+The config middleware is an independent middleware and needs to be installed and used separately
 
 ```
 npm i sener-config
@@ -18,103 +18,103 @@ import { Static } from 'sener-config';
 new Static();
 ```
 
-## 基础使用
+## Basic usage
 
-config 中间件用于进行一些服务端的参数配置，保存形式为json文件，支持动态修改立即生效。
+The config middleware is used to configure some server-side parameters, saved as a json file, and supports dynamic modification to take effect immediately.
 
 ```js
 import { Sener, Router } from 'sener';
 import { Config } from 'sener-config';
 
 const router = new Router({
-    '/demo': ({ config }) => {
-        console.log(config.level); // 获取level配置
-        return { data: {success: true} };
-    },
+     '/demo': ({ config }) => {
+         console.log(config.level); // get level configuration
+         return { data: {success: true} };
+     },
 });
 
 new Sener({
-  middlewares: [router, new Config()],
+   middlewares: [router, new Config()],
 });
 ```
 
-## 构造参数
+## Construction parameters
 
-config 中间件支持以下配置：
+The config middleware supports the following configurations:
 
 ```ts
 type IConfigChange = (data: {
-  key: string, value: any, prev: any
+   key: string, value: any, prev: any
 }) => void;
 
 interface IInitialConfigData {
-    filename: string;
-    data: Record<string, any>;
+     filename: string;
+     data: Record<string, any>;
 }
 interface IConfigOptions {
-    dir?: string, // 配置文件的存储目录 默认为 'config', 即为 {Sener.Dir}/config
-    format?: boolean, // 是否格式化配置文件，默认为true
-    initial?: IInitialConfigData[], // 初始配置数据
-    onchange?: IConfigChange; // 配置数据改变的回调函数
+     dir?: string, // The storage directory of the configuration file is 'config' by default, which is {Sener.Dir}/config
+     format?: boolean, // Whether to format the configuration file, the default is true
+     initial?: IInitialConfigData[], // initial configuration data
+     onchange?: IConfigChange; // callback function for configuration data change
 }
 ```
 
-dir 可以配置相对路径，表示相对于 `Sener.Dir`，也可以配置一个绝对路径
+dir can be configured with a relative path, which means relative to `Sener.Dir`, or an absolute path can be configured
 
-## 初始配置数据
+## Initial configuration data
 
-初始配置数据为一个数据，元素包含有filename和data，表示一个配置文件，多个即表示需要使用多个配置文件
+The initial configuration data is a piece of data, the element contains filename and data, indicating a configuration file, and multiple means that multiple configuration files need to be used
 
 ```js
 
 new Config({
-    initial: [{
-        filename: 'user', // 用户配置文件，存储为 user.json
-        data: {
-            showImage: true, // 配置是否展示头像
-            maxVisitors: 999, // 配置最大可见访客
-        }
-    }, {
-        filename: 'goods', // 商品配置文件，存储为 goods.json
-        data: {
-            maxPrice: 9999,
-            // ...
-        }
-    }]
+     initial: [{
+         filename: 'user', // user profile, stored as user.json
+         data: {
+             showImage: true, // Configure whether to display the avatar
+             maxVisitors: 999, // Configure the maximum visible visitors
+         }
+     }, {
+         filename: 'goods', // Product configuration file, stored as goods.json
+         data: {
+             maxPrice: 9999,
+             //...
+         }
+     }]
 });
 ```
 
-注: 
+Note: 
 
-1. 如果initial中的文件不存在，则会创建并写入数据，如果存在，则会将数据合并到原文件中的数据中，合并规则为只对原文件中 undefined 属性进行替换，不会修改已存在的属性，且会深度遍历原数据。
-2. initial 中的所有data与原文件中的data（如存在）合并之后，会将所有属性归并在一个map中，即为 SenerContext的config对象，config[key] 可以读取和设置到最新的json文件数据
+1. If the file in initial does not exist, the data will be created and written. If it exists, the data will be merged into the data in the original file. The merging rule is to only replace the undefined attribute in the original file without modifying it. Existing attributes, and will traverse the original data in depth.
+2. After all the data in the initial file is merged with the data in the original file (if it exists), all attributes will be merged into a map, which is the config object of SenerContext. config[key] can be read and set to the latest json file data
 
-## 自定义的SenerContext
+## Custom SenerContext
 
-config 中间件只有一个Context属性，即为 config
+The config middleware has only one Context attribute, which is config
 
-可以使用属性直接获取或者赋值，也可以通过 $onchange 方法监听配置文件的变更
+You can use attributes to get or assign values directly, or you can listen to configuration file changes through the $onchange method
 
 ```js
 const router = new Router({
-    '/demo': ({ config }) => {
-        console.log(config.level); // 获取level配置
-        config.level = 3;
-        config.$onchange = (key, value, prev) => {
-            console.log(key, value, prev);
-        }
-        return { data: {success: true} };
-    },
+     '/demo': ({ config }) => {
+         console.log(config.level); // get level configuration
+         config.level = 3;
+         config. $onchange = (key, value, prev) => {
+             console.log(key, value, prev);
+         }
+         return { data: {success: true} };
+     },
 });
 ```
 
 ## API
 
-config-middleware 对象上具有如下api可以直接使用
+The config-middleware object has the following APIs that can be used directly
 
 ### data
 
-data 等价于 SenerContext.config
+data is equivalent to SenerContext.config
 
 ```js
 const config = new Config();
@@ -124,31 +124,31 @@ config.data.level = 1;
 
 ### writeConfig
 
-writeConfig 等价于 config.data.xxx = xxx;
+writeConfig is equivalent to config.data.xxx = xxx;
 
 ```js
 const config = new Config();
 config.writeConfig('age', 1);
 ```
 
-### onConfigChange
+###onConfigChange
 
-onConfigChange 等价于 config.data.$onchange
+onConfigChange is equivalent to config.data.$onchange
 
 ```js
 const config = new Config();
 config.onConfigChange(()=>{});
 ```
 
-## ts类型声明
+## ts type declaration
 
-如果要对 config 的数据进行类型声明，可以使用如下代码进行扩展：
+If you want to declare the type of config data, you can use the following code to extend it:
 
 ```ts
 declare module 'sener' {
-    interface IConfigData {
-        level: number,
-        age: number,
-    }
+     interface IConfigData {
+         level: number,
+         age: number,
+     }
 }
 ```

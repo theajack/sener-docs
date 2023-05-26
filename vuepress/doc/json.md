@@ -1,13 +1,13 @@
 <!--
- * @Author: chenzhongsheng
- * @Date: 2023-05-14 14:49:08
- * @Description: Coding something
+  * @Author: chenzhongsheng
+  * @Date: 2023-05-14 14:49:08
+  * @Description: Coding something
 -->
-# json中间件
+# json middleware
 
-## 安装使用
+## Install and use
 
-json中间件为独立中间件，需要单独安装使用
+The json middleware is an independent middleware and needs to be installed and used separately
 
 ```
 npm i sener-json
@@ -18,142 +18,142 @@ import { Json } from 'sener-json';
 new Json();
 ```
 
-## 基础使用
+## Basic usage
 
 ```js
 import { Sener, Router } from 'sener';
 import { Json } from 'sener-json';
 
 const router = new Router({
-    '/demo': ({ write }) => {
-        const { save, data } = write('user'); // 对 user.json 进行操作
-        data.push({nickname: 'xxxx', age: 18});
-        save(); // 保存修改的data
-        return { data: {success: true} };
-    },
+     '/demo': ({ write }) => {
+         const { save, data } = write('user'); // operate on user.json
+         data.push({nickname: 'xxxx', age: 18});
+         save(); // save the modified data
+         return { data: {success: true} };
+     },
 });
 
 new Sener({
-  middlewares: [router, new Json()],
+   middlewares: [router, new Json()],
 });
 ```
 
-json中间件会往context上挂载四个方法，后面会详细介绍用法
+The json middleware will mount four methods on the context, and the usage will be introduced in detail later
 
 ```ts
 interface IJsonHelper {
-  file: <Model=any>(key: string) => File<Model>;
-  write: <Model=any>(key: string) => IOprateReturn<Model>;
-  read: <Model=any>(key: string) => Model[];
-  readMap: <Model=any>(key: string) => IJson<Model>;
+   file: <Model=any>(key: string) => File<Model>;
+   write: <Model=any>(key: string) => IOprateReturn<Model>;
+   read: <Model=any>(key: string) => Model[];
+   readMap: <Model=any>(key: string) => IJson<Model>;
 }
 ```
 
-## 构造参数
+## Construction parameters
 
-json中间件支持以下配置：
+The json middleware supports the following configurations:
 
 ```ts
 interface IJsonOptions {
-    dir?: string, // dir 用于设置json文件的保存目录，默认为 'json', 即为 {Sener.Dir}/json
-    format?: boolean, // 是否格式化Json内容，默认为false
+     dir?: string, // dir is used to set the saving directory of the json file, the default is 'json', which is {Sener.Dir}/json
+     format?: boolean, // Whether to format the Json content, the default is false
 }
 ```
 
-dir 可以配置相对路径，表示相对于 `Sener.Dir`，也可以配置一个绝对路径
+dir can be configured with a relative path, which means relative to `Sener.Dir`, or an absolute path can be configured
 
-## write 方法
+## write method
 
-write方法用户写文件，该方法会返回 `IOprateReturn`，其中包含数据和一些操作方法：
+The write method user writes a file, this method will return `IOprateReturn`, which contains data and some operation methods:
 
 ```ts
 interface IOprateReturn<Model=any> {
-    data: Model[]
-    map: IJson<Model>;
-    save: <T = Promise<boolean>, R extends boolean = false>(
-        options?: {data?: Model[], map?: Model, imme?: R}
-    ) => (R extends true ? boolean: T),
-    clear: <T extends any>(data?: T) => T,
-    id: () => number,
-    index: () => number,
+     data: Model[]
+     map: IJson<Model>;
+     save: <T = Promise<boolean>, R extends boolean = false>(
+         options?: {data?: Model[], map?: Model, imme?: R}
+     ) => (R extends true ? boolean: T),
+     clear: <T extends any>(data?: T) => T,
+     id: () => number,
+     index: () => number,
 }
 ```
 
-调用write方法会打开一个文件操作，会返回操作的数据和封装的操作方法
+Calling the write method will open a file operation, and will return the data of the operation and the encapsulated operation method
 
-1. data：data表示数据的集合，是一个数组
-2. map：map使用场景是保存键值映射表，这种场景使用map比data会更高效，map和data可以同时使用
-3. save：save方法用于保存对 data和map的修改
-4. clear：如果由于某些逻辑不需要保存文件，比如操作失败。则在返回之前需要调用clear方法清除一下文件操作话柄。当然不调用过一段时间之后该操作也会被自动回收。
-5. id：id方法用于生成自增id以便使用在新数据中
-6. index：index方法用于生成局部的自增id，每次调用write方法都会从0开始
+1. data: data represents a collection of data, which is an array
+2. map: The usage scenario of map is to save the key-value mapping table. In this scenario, using map is more efficient than data, and map and data can be used at the same time
+3. save: The save method is used to save the modification of data and map
+4. clear: If the file does not need to be saved due to some logic, such as an operation failure. Then you need to call the clear method to clear the file operation handle before returning. Of course, the operation will be automatically recycled after not being called for a period of time.
+5. id: The id method is used to generate an auto-increment id for use in new data
+6. index: The index method is used to generate a local self-incrementing id, and each call to the write method will start from 0
 
-以下做一个简单地演示
-
-```js
-const router = new Router({
-    '/demo': ({ write }) => {
-        const { data, map, save, clear, id, index } = write('user'); // 对 user.json 进行操作，如果没有文件会自动生成
-        const user = {nickname: 'xxxx', id: id()}; // 加入自增id
-        user.something = [{id: index()}, {id: index()}]; // 使用局部自增id
-        map[user.id] = user.nickname;
-        if(id > 10000){ // 自定义条件是否保存
-            clear();
-            return {data: {success: false}}
-        }
-        save(); // 保存修改的data和map
-        return { data: {success: true} };
-    },
-});
-```
-
-## read 方法
-
-read 方法用于获取json文件中的data集合
+The following is a simple demonstration
 
 ```js
 const router = new Router({
-    '/demo': ({ write }) => {
-        const data = read('user');
-        const user = data.find(item => item.id === '0001'); // 找到id是0001的用户
-        return { data: {user} };
-    },
+     '/demo': ({ write }) => {
+         const { data, map, save, clear, id, index } = write('user'); // operate on user.json, if there is no file, it will be automatically generated
+         const user = {nickname: 'xxxx', id: id()}; // add auto-increment id
+         user.something = [{id: index()}, {id: index()}]; // Use local auto-increment id
+         map[user.id] = user.nickname;
+         if(id > 10000){ // Whether to save custom conditions
+             clear();
+             return {data: {success: false}}
+         }
+         save(); // Save the modified data and map
+         return { data: {success: true} };
+     },
 });
 ```
 
-## readMap 方法
+## read method
 
-readMap 方法与read方法类似，不过返回的是 map 映射表
+The read method is used to obtain the data collection in the json file
 
 ```js
 const router = new Router({
-    '/demo': ({ write }) => {
-        const map = readMap('user');
-        const nickname = map['0001']; // 找到id是0001的用户名
-        return { data: {nickname} };
-    },
+     '/demo': ({ write }) => {
+         const data = read('user');
+         const user = data.find(item => item.id === '0001'); // find the user whose id is 0001
+         return { data: {user} };
+     },
 });
 ```
 
-## file 方法
+## readMap method
 
-file方法用于返回封装的File对象，一般无需使用这个方法，具体API使用可以参考 [file.ts](https://github.com/theajack/sener/blob/master/packages/json/src/file.ts)
+The readMap method is similar to the read method, but returns a map mapping table
 
-## 类型支持
+```js
+const router = new Router({
+     '/demo': ({ write }) => {
+         const map = readMap('user');
+         const nickname = map['0001']; // find the username whose id is 0001
+         return { data: {nickname} };
+     },
+});
+```
 
-以下四个方法都支持传一个泛型来指定，data集合的数据类型，以write为例
+## file method
+
+The file method is used to return the encapsulated File object. Generally, there is no need to use this method. For specific API usage, please refer to [file.ts](https://github.com/theajack/sener/blob/master/packages/json/src/file .ts)
+
+## Type support
+
+The following four methods all support passing a generic to specify the data type of the data collection, taking write as an example
 
 ```js
 interface User {
-    nickname: string;
-    age: number;
+     nickname: string;
+     age: number;
 }
 
 const router = new Router({
-    '/demo': ({ write }) => {
-        const { data, save } = write<User>('user'); // 对 user.json 进行操作
-        // ...
-        return { data: {success: true} };
-    },
+     '/demo': ({ write }) => {
+         const { data, save } = write<User>('user'); // operate on user.json
+         //...
+         return { data: {success: true} };
+     },
 });
 ```

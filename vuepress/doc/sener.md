@@ -1,118 +1,118 @@
 <!--
- * @Author: chenzhongsheng
- * @Date: 2022-11-05 10:51:06
- * @Description: Coding something
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-05-21 12:46:37
+  * @Author: chenzhongsheng
+  * @Date: 2022-11-05 10:51:06
+  * @Description: Coding something
+  * @LastEditors: Please set LastEditors
+  * @LastEditTime: 2023-05-21 12:46:37
 -->
 
-# 概念与基础
+# Concepts and basics
 
-## Sener构造
+## Sener construction
 
-开发者可以使用 Sener 启动一个服务器，该构造函数接收一个可选的json参数，包含有以下三个可选属性：
+Developers can use Sener to start a server. The constructor accepts an optional json parameter, which contains the following three optional attributes:
 
-1. port: 指定服务器的端口号，默认值为9000
-2. middlewares: 传入一个中间件数组，默认为 []
-3. onerror: 自定义处理请求中的错误，默认为空，交由sener处理
+1. port: Specify the port number of the server, the default value is 9000
+2. middlewares: Pass in an array of middleware, the default is []
+3. onerror: Custom processing errors in the request, the default is empty, and it will be handled by sener
 
 ```js
 import {Sener} from 'sener';
-new Sener(); 
+new Sener();
 ```
 
-带有参数
+with parameters
 ```js
 import {Sener} from 'sener';
 new Sener({
-    port: 9000,
-    middlewares: [],
-    onerror({error, from, context}){
-        // ...do something
-    }
-}); 
+     port: 9000,
+     middlewares: [],
+     onerror({error, from, context}){
+         // ...do something
+     }
+});
 ```
 
-onerror 回调参数如下
+The onerror callback parameters are as follows
 
 ```ts
 export type IOnError = (err: {
-  error: any,
-  from: IErrorFrom,
-  context: ISenerContext
+   error: any,
+   from: IErrorFrom,
+   context: ISenerContext
 }) => IPromiseMayBe<ISenerResponse>;
 ```
 
-你可以从 sener 中引入 IOnError 接口
+You can import IOnError interface from sener
 
 ```ts
 import {IOnError} from 'sener';
 ```
 
-1. error 为请求过程中抛出的错误
-2. from 为抛出错误的阶段，可选值为 'enter' | 'request' | 'response' | 'leave'
-3. context 为请求的上下文，下面会介绍到
+1. error is the error thrown during the request
+2. from is the stage where an error is thrown, the optional value is 'enter' | 'request' | 'response' | 'leave'
+3. context is the context of the request, which will be introduced below
 
-## 请求上下文
+## request context
 
-请求上下文 (ISenerContext) 是 Sener 中非常重要的一个概念，它是一个json对象，包含许多重要的属性，上下文用于中间件hooks中，后续中间件章节会着重介绍
+Request context (ISenerContext) is a very important concept in Sener. It is a json object that contains many important attributes. The context is used in middleware hooks, which will be introduced in the subsequent middleware chapters
 
 ```ts
 import {ISenerContext} from 'sener';
 ```
 
-ISenerContext 属性与介绍如下
+ISenerContext attributes and introduction are as follows
 
 ```ts
 interface ISenerContext {
-    requestHeaders: IncomingHttpHeaders; // 请求的header
-    url: string; // 请求的url
-    method: IServeMethod;
-    query: IJson<any>;
-    body: IJson<any>; // body解析的json
-    buffer: Buffer|null; // 请求body的原始数据
-    ip: string; // 客户端ip
+     requestHeaders: IncomingHttpHeaders; // request header
+     url: string; // request url
+     method: IServeMethod;
+     query: IJson<any>;
+     body: IJson<any>; // body parsed json
+     buffer: Buffer|null; // Request the original data of the body
+     ip: string; // client ip
 
-    request: IncomingMessage; // http模块原生的request对象
-    response: IResponse;  // http模块原生的response对象
-    env: ISenerEnv & IJson; // env中间件注入的环境变量
-    responded: boolean; // 标记是否已经构造了响应
-    isOptions: boolean; // 标记是否是options请求
-    returned: boolean; // 标记是否已经发送了响应
+     request: IncomingMessage; // HTTP module native request object
+     response: IResponse; // HTTP module native response object
+     env: ISenerEnv & IJson; // Environment variable injected by env middleware
+     responded: boolean; // mark whether a response has been constructed
+     isOptions: boolean; // Whether the tag is an options request
+     returned: boolean; // mark whether a response has been sent
 
-    // 响应返回
-    data: T, // 响应返回的数据
-    statusCode: number, // 响应返回的错误码
-    headers: IJson<string>; // 响应返回的header
-    success: boolean; // 表示请求是否成功
+     // response returns
+     data: T, // The data returned by the response
+     statusCode: number, // The error code returned by the response
+     headers: IJson<string>; // The headers returned by the response
+     success: boolean; // Indicates whether the request is successful
 
-    ...ISenerHelper; // 该参数为中间件自定义的helper 后续自定义中间件章节中会介绍到
+     ...ISenerHelper; // This parameter is a helper customized by the middleware, which will be introduced in the subsequent custom middleware chapter
 
-    // 工具函数
-    response404: (errorMessage?: string, header?: IJson<string>) => ISenerResponse; // 构造404响应
-    responseJson: (data: IJson, statusCode?: number, header?: IJson<string>) => ISenerResponse; // 构造json响应
-    responseText: (text: string, statusCode?: number, header?: IJson<string>) => ISenerResponse; // 构造文本响应
-    responseHtml: (html: string, header?: IJson<string>) => ISenerResponse; // 构造html响应
-    responseData: (data: Partial<ISenerResponse>) => ISenerResponse; // 构造通用响应
-    markReturned: () => void; // 标记为已提前返回响应
+     // utility function
+     response404: (errorMessage?: string, header?: IJson<string>) => ISenerResponse; // Construct 404 response
+     responseJson: (data: IJson, statusCode?: number, header?: IJson<string>) => ISenerResponse; // construct json response
+     responseText: (text: string, statusCode?: number, header?: IJson<string>) => ISenerResponse; // construct text response
+     responseHtml: (html: string, header?: IJson<string>) => ISenerResponse; // construct html response
+     responseData: (data: Partial<ISenerResponse>) => ISenerResponse; // Construct a general response
+     markReturned: () => void; // mark as returned response early
 }
 ```
 
-## 工具方法
+## Tool method
 
-从上面小节的声明中可以看出，context 中含有六个工具方法
+As can be seen from the declaration in the above section, context contains six tool methods
 
-markReturned 工具方法用于在通过原生 response 已经发送响应到客户端之后，标记已发送状态，这就可以跳过后续不需要的中间件和返回响应。
+The markReturned tool method is used to mark the sent status after the response has been sent to the client through the native response, which can skip subsequent unnecessary middleware and return the response.
 
-其他五个 responseXXX 方法为构造响应合并到 context 中，本身并不会直接返回响应
+The other five responseXXX methods are merged into the context for constructing the response, and will not return the response directly
 
-工具方法可以在自定义中间件或router中使用，详细使用可以参考 router中间件
+The tool method can be used in custom middleware or router, for detailed usage, please refer to router middleware
 
-## 其他Api
+## Other APIs
 
 ### 1. use
 
-use 用于动态添加一个中间件
+use is used to dynamically add a middleware
 
 ```js
 const sener = new Sener();
@@ -121,18 +121,18 @@ sener.use(customMiddleware);
 
 ### 2. remove
 
-remove 用于动态移除一个中间件
+remove is used to dynamically remove a middleware
 
 ```js
 const sener = new Sener();
-sener.remove(customMiddleware);
+sener. remove(customMiddleware);
 ```
 
 ### 3. Dir
 
-Dir 是一个静态属性 用于获取或设置Sener的数据根目录
+Dir is a static property used to get or set Sener's data root directory
 
-默认值为 homedir() + './sener-data'
+Default is homedir() + './sener-data'
 
 ```js
 Sener.Dir;
@@ -141,8 +141,8 @@ Sener.Dir = '/custom-dir';
 
 ### 3. Version
 
-Version 是一个静态属性 用于获取版本号
+Version is a static property used to get the version number
 
 ```js
-Sener.Version;
+Sener. Version;
 ```

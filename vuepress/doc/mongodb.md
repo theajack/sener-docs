@@ -1,13 +1,13 @@
 <!--
- * @Author: chenzhongsheng
- * @Date: 2023-05-14 14:49:08
- * @Description: Coding something
+  * @Author: chenzhongsheng
+  * @Date: 2023-05-14 14:49:08
+  * @Description: Coding something
 -->
-# mongodb中间件
+# mongodb middleware
 
-## 安装使用
+## Install and use
 
-mongodb中间件为独立中间件，需要单独安装使用
+The mongodb middleware is an independent middleware and needs to be installed and used separately
 
 ```
 npm i sener-mongodb
@@ -16,252 +16,252 @@ npm i sener-mongodb
 ```js
 import { Mongo } from 'sener-mongodb';
 new Mongo({
-    // ...
+     //...
 });
 ```
 
-## 基础使用
+## Basic usage
 
-mongodb 中间件用于进行mongodb数据库的连接和数据操作
+mongodb middleware is used for connection and data operation of mongodb database
 
 ```js
 import { Sener, Router } from 'sener';
 import { Mongo } from 'sener-mongodb';
 
 const router = new Router({
-    '/demo': async ({ col, mongo }) => {
-        await mongo.connect(); // 该步骤可以简写 见 配合router meta使用
-        const user = col('user');
-        const data = await user.find({name: 'tack'})
-        await mongo.close(); // 该步骤可以简写 见 配合router meta使用
-        return { data: {success: true} };
-    },
+     '/demo': async ({ col, mongo }) => {
+         await mongo.connect(); // This step can be abbreviated, see use with router meta
+         const user = col('user');
+         const data = await user. find({name: 'tack'})
+         await mongo.close(); // This step can be abbreviated, see use with router meta
+         return { data: {success: true} };
+     },
 });
 
 new Sener({
-  middlewares: [router, new Mongo({
-    dbName: 'prod',
-    url: 'xxx',
-  })],
+   middlewares: [router, new Mongo({
+     dbName: 'prod',
+     url: 'xxx',
+   })],
 });
 ```
 
-## 构造参数
+## Construction parameters
 
-mongodb 中间件依赖第三方包 [mongodb](https://www.npmjs.com/package/mongodb)，部分使用需要参考该包用法
+The mongodb middleware depends on the third-party package [mongodb](https://www.npmjs.com/package/mongodb), and some uses need to refer to the package usage
 
 ```ts
 interface IMongoProxyOptions<Models> {
-    url: string; // 数据库连接url 请参考 mongodb
-    dbName: string; // 数据库名称 请参考 mongodb
-    models?: Models; // 自定义数据表Model 后续会介绍
-    config?: MongoClientOptions; // new MongoClient 的其他配置，请参考 mongodb
+     url: string; // database connection url please refer to mongodb
+     dbName: string; // database name, please refer to mongodb
+     models?: Models; // custom data table Model will be introduced later
+     config?: MongoClientOptions; // For other configurations of new MongoClient, please refer to mongodb
 }
 ```
 
-## 自定义的context
+## Custom context
 
-如下声明所示，mongo中间件会在context中注如mongo和col属性
+As shown in the following statement, the mongo middleware will annotate the mongo and col attributes in the context
 
 ```ts
 interface IMongoHelper<Cols extends IModels> {
-  mongo: MongoProxy<Cols>;
-  col: <T extends keyof (Cols) >(name: T)=> Instanceof<(Cols)[T]>;
+   mongo: MongoProxy<Cols>;
+   col: <T extends keyof (Cols) >(name: T)=> Instanceof<(Cols)[T]>;
 }
 ```
 
-### col
+###col
 
-col 方法用于返回一个monogo collection封装之后的对象，后续会介绍该对象的使用
+The col method is used to return a monogo collection encapsulated object, and the use of this object will be introduced later
 
-### mongo
+###mongo
 
-以下是 MongoProxy 的声明
+Following is the declaration of MongoProxy
 
 ```ts
 class MongoProxy<Models extends IModels = any> {
-    client: MongoClient;
-    dbName: string;
-    db: Db;
-    cols: {
-        [key in keyof Models]: Instanceof<Models[key]>;
-    };
-    models: Models;
-    connected: boolean;
-    constructor({ url, models, dbName, config, }: IMongoProxyOptions<Models>);
-    switchDB(dbName: string): void; // 切换数据库
-    connect(): Promise<void>;
-    close(): Promise<void>;
-    execute(func: () => Promise<any>): Promise<any>; // 执行一个函数，执行前后会自动connect和close
-    col<Key extends keyof Models>(name: Key): Instanceof<Models[Key]>; // 获取一个 col，等价于context.col方法
+     client: MongoClient;
+     dbName: string;
+     db: Db;
+     cols: {
+         [key in keyof Models]: Instanceof<Models[key]>;
+     };
+     models: Models;
+     connected: boolean;
+     constructor({ url, models, dbName, config, }: IMongoProxyOptions<Models>);
+     switchDB(dbName: string): void; // switch database
+     connect(): Promise<void>;
+     close(): Promise<void>;
+     execute(func: () => Promise<any>): Promise<any>; // Execute a function, it will automatically connect and close before and after execution
+     col<Key extends keyof Models>(name: Key): Instanceof<Models[Key]>; // Get a col, equivalent to the context.col method
 }
 ```
 
 ## Col
 
-Col 为mongodb封装的一层数据表抽象层，Col是一个类，有许多的封装好的操作表数据的方法，开发者定义的业务表可以继承自Col封装自己的业务逻辑
+Col is a data table abstraction layer encapsulated by mongodb. Col is a class with many encapsulated methods for manipulating table data. The business tables defined by developers can inherit from Col to encapsulate their own business logic.
 
-如果使用ts开发，Col支持传入ts声明来支持表数据的类型支持。
+If using ts development, Col supports passing in ts declarations to support the type support of table data.
 
-以下是Col的类型声明：
+Here is the type declaration for Col:
 
 ```ts
 declare class MongoCol<T extends any = IJson> {
-    name: string;
-    col: Collection;
-    mongoProxy: MongoProxy;
-    constructor(name: string, mongoProxy?: MongoProxy);
-    init(mongo: MongoProxy): void;
-    add(data: T | T[]): Promise<mongodb.InsertManyResult<Document>> | Promise<mongodb.InsertOneResult<Document>>;
-    remove(filter: IJson, all?: boolean): Promise<mongodb.DeleteResult>;
-    update(filter: IJson, update: any, all?: boolean): Promise<mongodb.UpdateResult>;
-    find(filter?: IJson): Promise<T[]>;
-    page({ index, size, filter, needCount, }: {
-        filter?: IJson;
-        index: number;
-        size?: number;
-        needCount?: boolean;
-    }): Promise<{
-        data: T[];
-        totalCount: number;
-        totalPage: number;
-        index: number;
-    }>;
-    slice({ index, filter, size, }: { // 从index位置取size个元素
-        filter?: IJson;
-        index: number;
-        size?: number;
-    }): Promise<T[]>;
-    count(filter?: IJson): Promise<number>; // 从index位置取size个元素
+     name: string;
+     col: Collection;
+     mongoProxy: MongoProxy;
+     constructor(name: string, mongoProxy?: MongoProxy);
+     init(mongo: MongoProxy): void;
+     add(data: T | T[]): Promise<mongodb. InsertManyResult<Document>> | Promise<mongodb. InsertOneResult<Document>>;
+     remove(filter: IJson, all?: boolean): Promise<mongodb. DeleteResult>;
+     update(filter: IJson, update: any, all?: boolean): Promise<mongodb.UpdateResult>;
+     find(filter?: IJson): Promise<T[]>;
+     page({ index, size, filter, needCount, }: {
+         filter?: IJson;
+         index: number;
+         size?: number;
+         needCount?: boolean;
+     }): Promise<{
+         data: T[];
+         totalCount: number;
+         totalPage: number;
+         index: number;
+     }>;
+     slice({ index, filter, size, }: { // take size elements from index position
+         filter?: IJson;
+         index: number;
+         size?: number;
+     }): Promise<T[]>;
+     count(filter?: IJson): Promise<number>; // take size elements from index position
 }
 ```
 
-## 关于 filter
+## about filter
 
-filter 为过滤器，用于对数据集合进行删选。remove、update、find、page、slice、count方法中都会用到。
+filter is a filter used to delete and select data collections. It will be used in remove, update, find, page, slice, and count methods.
 
-以下举几个简单例子，具体使用请参考 [MongoDB官方文档](https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/query-document/)
-
-```js
-const router = new Router({
-    '/demo': async ({ col }) => {
-        const user = col('user');
-
-        await user.find({name: 'tack'}); // name=tack
-        await user.count({age: {$gt: 18}}); // age>18
-        await user.remove({age: {$not: {$gt: 18}}}); // age<=18
-        await user.update({age: {$lt: 18}}, $set: { adult: false }, true); // set adult=false when age < 18
-        await user.find({
-            age: {$gt: 18},
-            height: {$gt: 180},
-        }); // age > 18 and height > 180
-        await user.find({
-            $or: [
-                {age: {$gt: 18}},
-                {height: {$gt: 180}},
-            ]
-        }); // age > 18 or height > 180
-
-    },
-});
-```
-
-## 配合router meta使用
-
-每次调用 col 方法都前后都需要使用 connect打开数据库，调用完成之后都需要close关闭数据库。
-
-这个操作会比较繁琐，可以通过的 meta.db来指定某些需要数据库操作路由进入和离开时自动打开和关闭数据库：
+Here are a few simple examples. For specific usage, please refer to [MongoDB Official Documentation](https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/query-document/)
 
 ```js
 const router = new Router({
-    // 需要访问数据库的路由指定db=true即可
-    '[db]/addComment': async ({ col }) => {
-        const comment = col('comment');
-        await comment.add({content: 'xxx'});
-        return {data: {success: true}}
-    },
+     '/demo': async ({ col }) => {
+         const user = col('user');
+
+         await user. find({name: 'tack'}); // name=tack
+         await user.count({age: {$gt: 18}}); // age>18
+         await user.remove({age: {$not: {$gt: 18}}}); // age<=18
+         await user.update({age: {$lt: 18}}, $set: { adult: false }, true); // set adult=false when age < 18
+         await user. find({
+             age: {$gt: 18},
+             height: {$gt: 180},
+         }); // age > 18 and height > 180
+         await user. find({
+             $or: [
+                 {age: {$gt: 18}},
+                 {height: {$gt: 180}},
+             ]
+         }); // age > 18 or height > 180
+
+     },
 });
 ```
 
-## 自定义Col
+## Use with router meta
 
-可以通过继承 MongoCol 类来实现业务Col，内部封装数据库操作代码，对外暴露业务接口，如下：
+Every time you call the col method, you need to use connect to open the database before and after, and you need to close the database after the call is completed.
+
+This operation will be cumbersome, and you can use meta.db to specify certain database operations that require routing to automatically open and close the database when entering and leaving:
+
+```js
+const router = new Router({
+     // The route that needs to access the database can specify db=true
+     '[db]/addComment': async ({ col }) => {
+         const comment = col('comment');
+         await comment. add({content: 'xxx'});
+         return {data: {success: true}}
+     },
+});
+```
+
+## Custom Col
+
+The business Col can be implemented by inheriting the MongoCol class, internally encapsulating the database operation code, and exposing the business interface externally, as follows:
 
 ```js
 import { success } from 'sener';
 import { MongoCol } from 'sener-mongodb';
 
 export class User extends MongoCol {
-    name = 'user';
+     name = 'user';
 
-    async regist (nickname: string, pwd: string, email: string) {
-        const user = {};
-        // do something ...
-        await this.add(user);
-        return success({}, '注册登录成功');
-    }
+     async regist (nickname: string, pwd: string, email: string) {
+         const user = {};
+         // do something...
+         await this. add(user);
+         return success({}, 'Successful registration and login');
+     }
 
-    async login (nickname: string, pwd: string) {
-        // ...do someting
-        return success();
-    }
+     async login (nickname: string, pwd: string) {
+         // ...do something
+         return success();
+     }
 }
 ```
 
-使用时
+when using it
 
 ```js
 const router = new Router({
-    '[db]/regist': async ({ col }) => {
-        const user = col('user');
-        await user.regist('xx', 'xx', 'xx');
-        return {data: {success: true}}
-    },
+     '[db]/regist': async ({ col }) => {
+         const user = col('user');
+         await user.regist('xx', 'xx', 'xx');
+         return {data: {success: true}}
+     },
 });
 ```
 
-## ts类型声明
+## ts type declaration
 
-### 自定义Col类型声明
+### Custom Col type declaration
 
-通过泛型传入数据类型之后，后续通过add、find、page等方法返回的数据都会有相应的类型支持
+After the data type is passed in through generics, the subsequent data returned through add, find, page and other methods will have corresponding type support
 
 ```ts
 import { success } from 'sener';
 import { MongoCol } from 'sener-mongodb';
 
 interface IUserData {
-    nickname: string;
-    pwd: string;
-    email: string;
+     nickname: string;
+     pwd: string;
+     email: string;
 }
 
 export class User extends MongoCol<IUserData> {
-    name = 'user';
-    // ...
+     name = 'user';
+     //...
 }
 ```
 
-### 指定Cols
+### Specify Cols
 
 ```ts
 import { Mongo } from 'sener-mongodb';
 
 const Cols = {
-    user: UserCol, // 自定义的UserCol
-    comment: Comment, // 自定义的CommentCol
-    // ...
+     user: UserCol, // custom UserCol
+     comment: Comment, // Custom CommentCol
+     //...
 };
 
 const mongo = new Mongo({
-    dbName: 'xxx',
-    url: 'xxx',
-    models: Cols,
+     dbName: 'xxx',
+     url: 'xxx',
+     models: Cols,
 });
 
 declare module 'sener' {
-    interface Model {
-        models: typeof Cols;
-    }
+     interface Model {
+         models: typeof Cols;
+     }
 }
 ```

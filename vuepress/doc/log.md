@@ -1,13 +1,13 @@
 <!--
- * @Author: chenzhongsheng
- * @Date: 2023-05-14 14:49:08
- * @Description: Coding something
+  * @Author: chenzhongsheng
+  * @Date: 2023-05-14 14:49:08
+  * @Description: Coding something
 -->
-# log中间件
+# log middleware
 
-## 安装使用
+## Install and use
 
-log中间件为独立中间件，需要单独安装使用
+The log middleware is an independent middleware and needs to be installed and used separately
 
 ```
 npm i sener-log
@@ -18,90 +18,90 @@ import { Log } from 'sener-log';
 new Log();
 ```
 
-## 基础使用
+## Basic usage
 
-log 中间件用于进行服务端日志打印，保存文件为 .log 文件。
+The log middleware is used for server-side log printing, saving the file as a .log file.
 
-以下为上报一条日志的基本用法
+The following is the basic usage of reporting a log
 
 ```js
 import { Sener, Router } from 'sener';
 import { Log } from 'sener-log';
 
 const router = new Router({
-    '/demo': ({ logger }) => {
-        logger.log('test log', {age: 18}, 'info');
-        return { data: {success: true} };
-    },
+     '/demo': ({ logger }) => {
+         logger.log('test log', {age: 18}, 'info');
+         return { data: {success: true} };
+     },
 });
 
 new Sener({
-  middlewares: [router, new Log()],
+   middlewares: [router, new Log()],
 });
 ```
 
-除了使用logger context使用之外，也可以使用中间件来调用logger
+In addition to using logger context, you can also use middleware to call logger
 
 ```js
 const log = new Log();
 
 log.logger.log('test log', {age: 18}, 'info');
-// log.logger 等价于 SenerContext.logger;
+// log.logger is equivalent to SenerContext.logger;
 ```
 
-以下为一条基础的日志内容
+The following is a basic log content
 
 ```
-[2023-03-07 01:46:09:313] type=log; msg=$$$message; payload={}; traceid=f8f9fa20-d192-405a-818e-0fc3653be13d; logid=93955e89-9e7d-40bb-b853-f653b2b892c3; duration=3; ua=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36; host=localhost:3001; timestamp=1678124769313;
+[2023-03-07 01:46:09:313] type=log; msg=$$$message; payload={}; traceid=f8f9fa20-d192-405a-818e-0fc3653be13d; logid=93955e89-9e7d-40bb- b853-f653b2b892c3; duration=3; ua=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36; host=localhost:3001; timestamp=1678 124769313;
 ```
 
-特点：
+Features:
 
-1. 支持上报公共信息、自定义基础上报信息
-2. 支持配置保存目录
-3. 支持配置单文件最大记录数，超过最大记录数会启用新日志文件保存
-4. 支持配置日志等级，按需打印日志
-5. 支持通过traceid关联一次客户端请求过程中访问到的所有服务端内部请求。
-6. 批量写日志文件，最大限度的节省性能开销。也支持主动保存日志。
-7. 支持记录每个日志距离请求开始的时间消耗
+1. Support reporting of public information and reporting of information on a custom basis
+2. Support configuration save directory
+3. Support the configuration of the maximum number of records in a single file, if the maximum number of records is exceeded, a new log file will be saved
+4. Support configuration log level, print logs on demand
+5. Support to correlate all server-side internal requests accessed during a client request through traceid.
+6. Write log files in batches to save performance overhead to the greatest extent. Active logging is also supported.
+7. Support recording the time consumption of each log from the start of the request
 
-## 构造参数
+## Construction parameters
 
-log 中间件具有如下构造参数
+The log middleware has the following construction parameters
 
 ```ts
 interface ILoggerOptions {
-    dir?: string; // 日志文件的存储目录 默认为 'log', 即为 {Sener.Dir}/log
-    useConsole?: boolean; // 是否写日志是使用console.log打印日志 默认为false 一般用于dev时
-    maxRecords?: number; // 单文件最大的日志数量 默认值为10000
-    level?: (()=>number)|number; // 配置日志级别 支持使用常量或配置一个函数动态获取 默认值为 -1 即所有日志都会被写入文件。配置常量之后也可以通过api来动态修改。
-    interval?: number; // 设置检查保存日志的周期时间，单位为ms，默认为 5000
+     dir?: string; // The storage directory of the log file is 'log' by default, which is {Sener.Dir}/log
+     useConsole?: boolean; // Whether to write logs is to use console.log to print logs, the default is false, generally used for dev
+     maxRecords?: number; // The maximum number of logs for a single file, the default value is 10000
+     level?: (()=>number)|number; // Configure the log level. You can use a constant or configure a function to get it dynamically. The default value is -1, that is, all logs will be written to the file. After configuring the constant, it can also be dynamically modified through the API.
+     interval?: number; // Set the cycle time for checking and saving logs, the unit is ms, the default is 5000
 }
 ```
 
-1. 关于level：每条日志都有一个level，默认值为5，当日志level值大于等于配置的level时，该日志才会被写入日志文件
-2. 关于日志保存机制：logger 会定期检查日志队列，interval便是设置这个定时检查周期的，如果有需要保存的日志，就会批量一次性写入，已实现节省性能开销。也可以通过save方法主动强制保存。
+1. About level: each log has a level, the default value is 5, when the log level value is greater than or equal to the configured level, the log will be written into the log file
+2. About the log storage mechanism: logger will check the log queue regularly, interval is to set this regular check period, if there are logs that need to be saved, they will be written in batches at one time, which has achieved performance savings. You can also actively force the save through the save method.
 
-## 完整日志信息
+## Full log information
 
-一条完整的日志基础信息如下：
+A complete log basic information is as follows:
 
 ```ts
 interface ILogDBData {
-  traceid: string; // 一次请求在服务端对应的id
-  host: string; // 客户端host
-  url: string; // 客户端url
-  ua: string; // 客户端ua
+   traceid: string; // The id corresponding to a request on the server side
+   host: string; // client host
+   url: string; // client url
+   ua: string; // client ua
 
-  msg: string; // 日志消息
-  payload: any; // 数据
-  type: TLogType; // 日志类型
-  level: number; // 日志级别
+   msg: string; // log message
+   payload: any; // data
+   type: TLogType; // log type
+   level: number; // log level
 
-  duration: number; // 打印时距离请求开始的时间 单位为ms
-  time: string; // 打印时的格式化时间 格式化到ms
-  timestamp: number; // 打印时的时间戳
-  logid: string; // 单条日志的唯一表示
+   duration: number; // The time from the start of the request when printing, in ms
+   time: string; // formatted time when printing formatted to ms
+   timestamp: number; // Timestamp when printing
+   logid: string; // unique representation of a single log
 }
 ```
 
@@ -109,113 +109,113 @@ interface ILogDBData {
 
 ### log
 
-写日志的api，声明如下
+The api for writing logs is declared as follows
 
 ```ts
 type TLogType = 'error' | 'log' | 'warn' | 'info';
 
 interface IMessageData {
-    msg?: string; //
-    payload?: any;
-    type?: TLogType;
-    level?: number;
+     msg?: string; //
+     payload?: any;
+     type?: TLogType;
+     level?: number;
 }
 function log(msg: string | IMessageData, payload?: any, type?: TLogType): void;
 ```
 
-使用字符串
+use string
 
 ```js
-logger.log('xxx');
+logger. log('xxx');
 logger.log('xxx', {age: 18}, 'error');
 ```
 
-使用object
+use object
 
 ```js
-logger.log({
-    msg: 'xxx',
-    payload: {age: 18},
-    level: 5, // level 默认值为5
+logger. log({
+     msg: 'xxx',
+     payload: {age: 18},
+     level: 5, // level default value is 5
 });
 ```
 
-### setLogLevel
+###setLogLevel
 
-动态设置日志级别
+Dynamically set the log level
 
 ```js
 logger.setLogLevel(10);
 ```
 
-### save
+###save
 
-save方法用于主动强制保存日志
+The save method is used to actively force the log to be saved
 
 ```js
-logger.save();
+logger. save();
 ```
 
 ## traceid
 
-traceid 会在请求到达服务端时通过获取或生成，然后写入baseInfo，当 headers['x-trace-id'] 不为空时，会生成一个 traceid。
+The traceid will be obtained or generated when the request reaches the server, and then written to baseInfo. When headers['x-trace-id'] is not empty, a traceid will be generated.
 
-后续在服务端内的所有内部请求产生的日志都会拥有一个相同 traceid，当响应被发送给客户端时，会将traceid作为 headers['x-trace-id'] 发送给客户端，可以通过 客户端获取到的 header traceid 查询一次请求产生的所有服务端日志
+The logs generated by all subsequent internal requests in the server will have the same traceid. When the response is sent to the client, the traceid will be sent to the client as headers['x-trace-id'], which can be passed to the client The obtained header traceid queries all server logs generated by a request
 
-获取 traceid 的示例如下
+An example of getting traceid is as follows
 
 ```js
-logger.traceid();
+logger. traceid();
 ```
 
 ### setBaseInfo
 
-setBaseInfo 方法用于设置日志的公共基础信息，声明如下
+The setBaseInfo method is used to set the public basic information of the log, which is declared as follows
 
 ```ts
 interface IBaseInfo {
-    traceid?: string; // 请求的traceid
-    host?: string; // 客户端host
-    url?: string; // 客户端访问url
-    ua?: string; // 客户端ua
+     traceid?: string; // request traceid
+     host?: string; // client host
+     url?: string; // client access url
+     ua?: string; // client ua
 }
 function setBaseInfo (data: Partial<IBaseInfo> & IJson): void;
 ```
 
-使用如下： 
+Use as follows:
 
 ```js
 logger.setBaseInfo({appName: 'xxx'});
 ```
 
-### newLogFile
+###newLogFile
 
-newLogFile 用于主动生成一个新的日志文件写日志
+newLogFile is used to actively generate a new log file to write the log
 
 ```js
-logger.newLogFile();
+logger. newLogFile();
 ```
 
-### count
+###count
 
-count 方法用于获取当前在使用的日志文件中有多少条日志
+The count method is used to get how many logs are currently in the log file in use
 
 ```js
-const n = logger.count();
+const n = logger. count();
 ```
 
 ### refreshDurationStart
 
-refreshDurationStart 用于刷新日志计算时间消耗的起始时间。
+refreshDurationStart is used to refresh the start time of log calculation time consumption.
 
 ```js
-logger.refreshDurationStart();
+logger. refreshDurationStart();
 ```
 
 ### refreshTraceId
 
-refreshTraceId 用于重新生成 traceid
+refreshTraceId is used to regenerate traceid
 
 ```js
-logger.refreshTraceId();
+logger. refreshTraceId();
 ```

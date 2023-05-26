@@ -1,12 +1,12 @@
 <!--
- * @Author: tackchen
- * @Date: 2022-10-09 21:45:38
- * @Description: Coding something
+  * @Author: tackchen
+  * @Date: 2022-10-09 21:45:38
+  * @Description: Coding something
 -->
-## 赞助
+## sponsorship
 
-开源维护不易。如果该项目对您有帮助且您有余力，可以微信扫码请作者喝一杯可乐或咖啡，非常感谢！
+Open source maintenance is not easy. If this project is helpful to you and you have spare energy, you can scan the QR code on WeChat to invite the author to drink a cup of Coke or coffee, thank you very much!
 
-如捐赠，请备注留一下github个人地址，后续会展示在此页中。
+If you donate, please leave your github personal address as a note, which will be displayed on this page later.
 
 <img src='https://shiyix.cn/images/wx-pay.png' width='300'/>

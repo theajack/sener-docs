@@ -4,34 +4,34 @@
             <img src='https://shiyix.cn/images/sener.png' alt=''>
         </div>
         <!-- web framework for Node.js -->
-        <div class='desc'><span>简洁高效的</span> <span class='sub-desc'>Node Web 框架</span></div>
+        <div class='desc'><span>Concise and efficient</span> <span class='sub-desc'>Node Web Framework</span></div>
         
         <div class='start-w'>
-            <el-button type='primary' @click='start'>开始 <i class='ei-location-arrow'></i></el-button>
-            <!-- <el-button type='primary' @click='run'>试验场 <i class='ei-cube-alt'></i></el-button> -->
-            <el-button type='primary' @click='install'>安装 <i class='ei-hand-up'></i></el-button>
+            <el-button type='primary' @click='start'>Start <i class='ei-location-arrow'></i></el-button>
+            <!-- <el-button type='primary' @click='run'>Proving ground <i class='ei-cube-alt'></i></el-button> -->
+            <el-button type='primary' @click='install'>Install <i class='ei-hand-up'></i></el-button>
         </div>
         <div class='feature-w'>
             <div class='f-i'>
-                <a style='font-weight: normal;' href='/cnchar/guide/intro.html#_2-%E5%8A%9F%E8%83%BD'><div class='f-t'><i class='ei-rocket'></i>简洁高效</div></a>
-                <div class='f-des'>核心简洁</div>
+                <a style='font-weight: normal;' href='/cnchar/guide/intro.html#_2-%E5%8A%9F%E8%83%BD'><div class='f-t'> <i class='ei-rocket'></i>Concise and efficient</div></a>
+                <div class='f-des'>The core is concise</div>
                 <div class='f-des'>ts 100%</div>
-                <div class='f-des'>高度类型支持</div>
-                <div class='f-des'>无第三方依赖</div>
+                <div class='f-des'>Strong type support</div>
+                <div class='f-des'>No third-party dependencies</div>
             </div>
             <div class='f-i'>
-                <div class='f-t'><i class='ei-cogs'></i>中间件</div>
-                <div class='f-des'>洋葱模型</div>
+                <div class='f-t'><i class='ei-cogs'></i>Middleware</div>
+                <div class='f-des'>onion model</div>
                 <div class='f-des'>Hooks</div>
-                <div class='f-des'>高度可扩展</div>
-                <div class='f-des'>自定义</div>
+                <div class='f-des'>Highly scalable</div>
+                <div class='f-des'>Custom</div>
             </div>
             <div class='f-i'>
-                <div class='f-t'><i class='ei-paint-brush'></i>功能丰富</div>
+                <div class='f-t'><i class='ei-paint-brush'></i>Feature-rich</div>
                 <div class='f-des'>cookie</div>
                 <div class='f-des'>session</div>
-                <div class='f-des'>ip风控</div>
-                <div class='f-des'>环境变量</div>
+                <div class='f-des'>ip risk control</div>
+                <div class='f-des'>environment variables</div>
             </div>
         </div>
         <div class='copy-right'>MIT Licensed | Copyright © 2023 - present <a href='https://www.github.com/theajack' target='view_window'>theajack</a></div>

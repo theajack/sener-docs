@@ -1,13 +1,13 @@
 <!--
- * @Author: chenzhongsheng
- * @Date: 2023-05-14 14:49:08
- * @Description: Coding something
+  * @Author: chenzhongsheng
+  * @Date: 2023-05-14 14:49:08
+  * @Description: Coding something
 -->
-# mysql中间件
+# mysql middleware
 
-## 安装使用
+## Install and use
 
-mysql中间件为独立中间件，需要单独安装使用
+The mysql middleware is an independent middleware and needs to be installed and used separately
 
 ```
 npm i sener-mysql
@@ -16,49 +16,49 @@ npm i sener-mysql
 ```js
 import { Mysql } from 'sener-mysql';
 new Mysql({
-    // ...
+     //...
 });
 ```
 
-## 基础使用
+## Basic usage
 
 ```js
 import { Sener, Router } from 'sener';
 import { Mysql } from 'sener-mysql';
 
 const router = new Router({
-    '/demo': async ({ querySql }) => {
-        const {results, fields} = await querySql('select * from user')
-        return { data: {success: true} };
-    },
+     '/demo': async ({ querySql }) => {
+         const {results, fields} = await querySql('select * from user')
+         return { data: {success: true} };
+     },
 });
 
 new Sener({
-  middlewares: [router, new Mysql({
-    host: 'localhost',
-    user: 'me',
-    password: 'secret',
-    database: 'my_db'
-  })],
+   middlewares: [router, new Mysql({
+     host: 'localhost',
+     user: 'me',
+     password: 'secret',
+     database: 'my_db'
+   })],
 });
 ```
 
-## 构造参数
+## Construction parameters
 
-mysql中间件依赖第三方包 [mysql](https://www.npmjs.com/package/mysql), 具体构造参数可以参考 `mysql.createConnection` 的参数
+The mysql middleware depends on the third-party package [mysql](https://www.npmjs.com/package/mysql), the specific construction parameters can refer to the parameters of `mysql.createConnection`
 
-## 自定义的context
+## Custom context
 
 ```ts
 interface IMysqlHelper {
-  querySql: (sql: string|QueryOptions) => Promise<{
-    results: any;
-    fields: FieldInfo[];
-  }>;
-  mysqlConn: Connection;
+   querySql: (sql: string|QueryOptions) => Promise<{
+     results: any;
+     fields: FieldInfo[];
+   }>;
+   mysqlConn: Connection;
 }
 ```
 
-QueryOptions、FieldInfo、 Connection 具体使用请参考 [mysql](https://www.npmjs.com/package/mysql)
+QueryOptions, FieldInfo, Connection Please refer to [mysql](https://www.npmjs.com/package/mysql) for specific usage
 
-目前 mysql 仅提供一个简单地封装使用，有待进一步封装和优化。
+At present, mysql only provides a simple encapsulation and needs to be further encapsulated and optimized.

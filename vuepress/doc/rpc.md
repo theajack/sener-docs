@@ -1,13 +1,13 @@
 <!--
- * @Author: chenzhongsheng
- * @Date: 2023-05-14 14:49:08
- * @Description: Coding something
+  * @Author: chenzhongsheng
+  * @Date: 2023-05-14 14:49:08
+  * @Description: Coding something
 -->
-# rpc中间件
+# rpc middleware
 
-## 安装使用
+## Install and use
 
-rpc中间件为独立中间件，需要单独安装使用
+The rpc middleware is an independent middleware and needs to be installed and used separately
 
 ```
 npm i sener-rpc
@@ -18,84 +18,84 @@ import { RPC } from 'sener-rpc';
 new RPC();
 ```
 
-## 基础使用
+## Basic usage
 
-rpc 中间件用于远程调用支持，内部兼容了服务端和客户端请求，同时支持服务端和客户端使用。
+The rpc middleware is used for remote call support, internally compatible with server and client requests, and supports both server and client.
 
 ```js
 import { Sener, Router } from 'sener';
 import { RPC } from 'sener-rpc';
 
 const router = new Router({
-    '/demo': async ({ col, rpc }) => {
-        const data = await rpc.comment.postReturn('/add', {content: 'xxx'});
-        return { data: {success: true} };
-    },
+     '/demo': async ({ col, rpc }) => {
+         const data = await rpc.comment.postReturn('/add', {content: 'xxx'});
+         return { data: {success: true} };
+     },
 });
 
 new Sener({
-  middlewares: [router, new RPC({
-    comment: 'http://localhost:9001/comment', // 指定 comment 服务的地址
-  })],
+   middlewares: [router, new RPC({
+     comment: 'http://localhost:9001/comment', // specify the address of the comment service
+   })],
 });
 ```
 
-## Request对象
+## Request object
 
-Request 对象是RPC中的一个重要概念，Request对象封装了一些用于发起http请求的方法，同时支持服务端和客户端。以下是Request对象的类声明：
+The Request object is an important concept in RPC. The Request object encapsulates some methods for initiating HTTP requests, and supports both the server and the client. The following is the class declaration of the Request object:
 
 ```ts
 interface IRequestConsOptions {
-    base: string,
-    headers?: IJson<string>;
-    traceid?: string;
+     base: string,
+     headers?: IJson<string>;
+     traceid?: string;
 }
 export class Request {
-    base: string;
-    headers: IJson<string> = {};
-    traceid: string = '';
-    tk = '';
-    setToken (tk: string) { this.tk = tk; };
+     base: string;
+     headers: IJson<string> = {};
+     traceid: string = '';
+     tk = '';
+     setToken (tk: string) { this.tk = tk; };
 
-    static Interceptor: IRPCRequestInterceptor;
-    static OnResponse: IRPCRequestOnResponse;
+     static Interceptor: IRPCRequestInterceptor;
+     static OnResponse: IRPCRequestOnResponse;
 
-    constructor (options: IRequestConsOptions);
+     constructor (options: IRequestConsOptions);
 
-    get<T=any> (url: string, query: IJson = {}): IRequestReturn<T>;
-    post<T=any> (url: string, body: IJson = {}, form = false): IRequestReturn<T>;
-    postForm<T=any> (url: string, body: IJson = {}): IRequestReturn<T>;
-    async request<T> (options: IRequestOptions): IRequestReturn<T>;
+     get<T=any> (url: string, query: IJson = {}): IRequestReturn<T>;
+     post<T=any> (url: string, body: IJson = {}, form = false): IRequestReturn<T>;
+     postForm<T=any> (url: string, body: IJson = {}): IRequestReturn<T>;
+     async request<T> (options: IRequestOptions): IRequestReturn<T>;
 
-    async postReturn<T=any> (url: string, body: IJson = {}): IParsedData;
-    async getReturn<T=any> (url: string, query: IJson = {}): IParsedData;
-    async requestReturn<T=any> (url: string, data: IJson = {}): IParsedData;
+     async postReturn<T=any> (url: string, body: IJson = {}): IParsedData;
+     async getReturn<T=any> (url: string, query: IJson = {}): IParsedData;
+     async requestReturn<T=any> (url: string, data: IJson = {}): IParsedData;
 
-    parseResult<T = any> (result: IRouterReturn<T>): IParsedData;
+     parseResult<T = any> (result: IRouterReturn<T>): IParsedData;
 }
 ```
 
-### request方法
+### request method
 
-request 方法是发起http请求的基础方法
+The request method is the basic method for initiating http requests
 
-参数与返回值如下
+The parameters and return values are as follows
 
 ```ts
 interface ICommonRequestOptions {
-    headers?: IJson<string>;
-    traceid?: string;
+     headers?: IJson<string>;
+     traceid?: string;
 }
 
 interface IRequestOptions extends ICommonRequestOptions {
-    body?: IJson,
-    query?: IJson,
-    url: string,
-    method?: IMethod,
-    data?: IJson,
-    form?: boolean,
-    traceid?: string,
-    base?: string,
+     body?: IJson,
+     query?: IJson,
+     url: string,
+     method?: IMethod,
+     data?: IJson,
+     form?: boolean,
+     traceid?: string,
+     base?: string,
 }
 ```
 
@@ -103,144 +103,144 @@ interface IRequestOptions extends ICommonRequestOptions {
 type IRequestReturn<T=any> = Promise<IRouterReturn>;
 type IRouterReturn<T=any> = ISenerResponse<IRouterData<T>>;
 interface ISenerResponse<T = any> {
-  data: T,
-  statusCode?: number,
-  headers?: IJson<string>;
-  success?: boolean;
+   data: T,
+   statusCode?: number,
+   headers?: IJson<string>;
+   success?: boolean;
 }
 interface IRouterData<T=any> {
-    code: number;
-    data: T;
-    extra?: any;
-    msg?: string;
-    success?: boolean;
+     code: number;
+     data: T;
+     extra?: any;
+     msg?: string;
+     success?: boolean;
 }
 ```
 
-post、get、postForm 方法皆是封装了request方法，其中postForm方法用于发送formdata数据
+The post, get, and postForm methods all encapsulate the request method, and the postForm method is used to send formdata data
 
-### parseResult方法
+### parseResult method
 
-parseResult 方法用于解析 IRequestReturn 数据，将其转换为 IParsedData
+The parseResult method is used to parse IRequestReturn data and convert it to IParsedData
 
 ```ts
 interface IBoolResult {
-  success: boolean;
-  msg?: string;
+   success: boolean;
+   msg?: string;
 }
 type IParsedData = IBoolResult & IJson;
 ```
 
-postReturn、getReturn、requestReturn 方法会先调用相应的 request方法，然后将返回值通过 parseResult 转换之后返回。
+The postReturn, getReturn, and requestReturn methods will first call the corresponding request method, and then convert the return value through parseResult and return it.
 
-### 拦截器
+### Interceptors
 
-Request 有两个静态的拦截器，Interceptor 和 OnResponse
+Request has two static interceptors, Interceptor and OnResponse
 
-Interceptor 拦截器用于在请求开始之前拦截请求，可以对请求参数进行修改然后继续请求
+The Interceptor interceptor is used to intercept the request before the request starts, you can modify the request parameters and then continue the request
 
-或者是直接返回一个响应，就不会再发起请求了
+Or return a response directly, and no more requests will be made
 
 ```ts
 interface IRPCResponse {
-    success: boolean,
-    data?: any,
-    code?: number,
-    msg: string,
-    err?: any,
-    [prop: string]: any,
+     success: boolean,
+     data?: any,
+     code?: number,
+     msg: string,
+     err?: any,
+     [prop: string]: any,
 }
 type IRPCRequestInterceptor = (data: IRequestOptions) => void|IRPCResponse;
 ```
 
-OnResponse 拦截器用于在请求完成之后，可以对请求返回结果进行修改。或者是直接返回一个新的响应
+The OnResponse interceptor is used to modify the result returned by the request after the request is completed. or return a new response directly
 
 ```ts
 type IRPCRequestOnResponse = (data: IRPCResponse) => void|IRPCResponse;
 ```
 
-## 自定义Request对象
+## Custom Request object
 
-我们可以通过继承Request对象来封装自己的服务业务逻辑
+We can encapsulate our own service business logic by inheriting the Request object
 
 ```js
 import { Request } from 'sener-rpc';
 interface IUser {
-    name: string;
-    age: number;
-    pwd: string;
+     name: string;
+     age: number;
+     pwd: string;
 }
 class UserRequest extends Request {
-    await regist(data: IUser){
-        // 如果是使用ts，可以使用泛型获得更好的类型支持
-        const data = await this.postReturn<IUser>('/user/regist', data);
-        // 可以做一些业务逻辑处理
-        return data;
-    }
+     await regist(data: IUser){
+         // If you are using ts, you can use generics to get better type support
+         const data = await this. postReturn<IUser>('/user/regist', data);
+         // can do some business logic processing
+         return data;
+     }
 }
 ```
 
-## 构造参数
+## Construction parameters
 
-构造参数支持传入键值对或者一个返回值为IJson&lt;Request|any>的函数, 声明如下：
+The construction parameter supports passing in key-value pairs or a function whose return value is IJson&lt;Request|any>, declared as follows:
 
 ```ts
 type IOptions = IJson<string> | ((traceid:string) => IJson<Request|any>);
 ```
 
-### 使用键值对作为参数
+### Use key-value pairs as parameters
 
-使用键值对表示声明一组远程服务的名称和服务地址，如下图所示
+Use key-value pairs to represent the name and service address of a set of remote services, as shown in the following figure
 
 ```js
 new RPC({
-    comment: 'http://localhost:9001/comment', // 指定 comment 服务的地址
-    goods: 'http://localhost:9002', // 指定 商品 服务的地址
-    // ...
+     comment: 'http://localhost:9001/comment', // specify the address of the comment service
+     goods: 'http://localhost:9002', // specify the address of the goods service
+     //...
 })
 ```
 
-rpc 会通过键值对构造 Request 对象来进行便捷的远程调用，基础使用的示例中 rpc.comment 便是一个 Request 对象。
+rpc will construct a Request object through a key-value pair to make a convenient remote call. In the basic example, rpc.comment is a Request object.
 
-### 使用函数作为参数
+### Using functions as parameters
 
-使用函数作为参数时，用于传入自定义的 Request对象，函数接受一个traceid的参数，该参数作用是用在服务端远程调用时保证traceid一致，需要作为 Request的构造参数。traceid与log中间件配合使用可以很有效的定位问题
+When using a function as a parameter, it is used to pass in a custom Request object. The function accepts a traceid parameter. This parameter is used to ensure that the traceid is consistent when the server is called remotely, and it needs to be used as a construction parameter of the Request. The use of traceid and log middleware can effectively locate the problem
 
 
-使用如下
+Use as follows
 
 ```js
 
-function createServices (traceid) {
-    return { 
-        user: new UserRequest({
-            base: 'http://localhost:9001/user',
-            traceid,
-        }),
-        comment: new CommentRequest({
-            base: 'http://localhost:9002/comment',
-            traceid,
-        })
-    };
+function createServices(traceid) {
+     return {
+         user: new UserRequest({
+             base: 'http://localhost:9001/user',
+             traceid,
+         }),
+         comment: new CommentRequest({
+             base: 'http://localhost:9002/comment',
+             traceid,
+         })
+     };
 }
 new RPC(createServices);
 ```
 
-## web客户端使用
+## web client use
 
-客户端使用时需要用到 WebRPC 对象
+The client needs to use the WebRPC object
 
 ```js
 import {WebRPC} from 'sener-rpc/dist/web.umd';
 
-// 1. 单个服务可以传入base地址
+// 1. A single service can pass in the base address
 const comment = new WebRPC('http://localhost:3001');
-await comment.get('/message', {page: 1});
+await comment. get('/message', {page: 1});
 
-// 2. 多个服务传入map
+// 2. Multiple services are passed into the map
 const rpc = new WebRPC({
-    user: 'http://localhost:3000', // user 服务的访问base地址
-    comment: 'http://localhost:3001', // comment 服务的访问base地址
+     user: 'http://localhost:3000', // access base address of user service
+     comment: 'http://localhost:3001', // access base address of comment service
 });
 await rpc.comment.get('/message', {page: 1});
 

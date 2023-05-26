@@ -1,73 +1,73 @@
 <!--
- * @Author: chenzhongsheng
- * @Date: 2023-05-14 14:48:30
- * @Description: Coding something
+  * @Author: chenzhongsheng
+  * @Date: 2023-05-14 14:48:30
+  * @Description: Coding something
 -->
-# cors 中间件
+# cors middleware
 
-cors中间件用来支持跨域请求
+Cors middleware is used to support cross-domain requests
 
-## 基础使用
+## Basic usage
 
 ```js
 import {Sener, Cors, Router} from 'sener'
 const router = new Router({
-    // ...
+     //...
 });
 
 new Sener({
-    middlewares: [router, new Cors()],
+     middlewares: [router, new Cors()],
 });
 ```
 
-注：如果使用类似 nginx 之类的反向代理服务器统一处理了跨域请求，则在sener服务中无需启用跨域功能
+Note: If a reverse proxy server like nginx is used to uniformly process cross-domain requests, there is no need to enable cross-domain functions in the sener service
 
-## 构造函数
+## Constructor
 
-Cors 中间件支持 ICorsOptions 来自定义跨域请求头，使用方式如下
+Cors middleware supports ICorsOptions to customize cross-domain request headers, and the usage is as follows
 
 ```ts
 type IServeMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS';
 interface ICorsOptions {
-    origin?: string;
-    methods?: IServeMethod[]|string;
-    headers?: string[]|string;
-    credentials?: boolean;
-    exposeHeaders?: string[]|string;
-    maxAge?: number;
+     origin?: string;
+     methods?: IServeMethod[]|string;
+     headers?: string[]|string;
+     credentials?: boolean;
+     exposeHeaders?: string[]|string;
+     maxAge?: number;
 }
 ```
 
-与header的对应关系如下
+The corresponding relationship with the header is as follows
 
 ```js
 const Names = {
-    origin: 'Access-Control-Allow-Origin',
-    methods: 'Access-Control-Allow-Methods',
-    headers: 'Access-Control-Allow-Headers',
-    credentials: 'Access-Control-Allow-Credentials',
-    exposeHeaders: 'Access-Control-Expose-Headers',
-    maxAge: 'Access-Control-Max-Age',
+     origin: 'Access-Control-Allow-Origin',
+     methods: 'Access-Control-Allow-Methods',
+     headers: 'Access-Control-Allow-Headers',
+     credentials: 'Access-Control-Allow-Credentials',
+     exposeHeaders: 'Access-Control-Expose-Headers',
+     maxAge: 'Access-Control-Max-Age',
 };
 ```
 
-以下为默认值
+The following is the default value
 
 ```js
 {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, GET, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': '*',
-    'Access-Control-Allow-Credentials': 'true',
+     'Access-Control-Allow-Origin': '*',
+     'Access-Control-Allow-Methods': 'POST, GET, PUT, DELETE, OPTIONS',
+     'Access-Control-Allow-Headers': '*',
+     'Access-Control-Allow-Credentials': 'true',
 }
 ```
 
-使用如下
+Use as follows
 
 ```js
 import {Cors} from 'sener';
 new Cors({
-    origin: 'http://shiyix.cn',
-    headers: ['x-trace-id', 'x-uid'],
+     origin: 'http://shiyix.cn',
+     headers: ['x-trace-id', 'x-uid'],
 });
 ```

@@ -119,5 +119,3 @@ const { Sener, Router } = require('sener');
 <div>
     <star></star>
 </div>
-
-

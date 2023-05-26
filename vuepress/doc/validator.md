@@ -1,91 +1,87 @@
 <!--
- * @Author: chenzhongsheng
- * @Date: 2023-05-14 14:49:05
- * @Description: Coding something
+  * @Author: chenzhongsheng
+  * @Date: 2023-05-14 14:49:05
+  * @Description: Coding something
 -->
-# validator中间件
+# validator middleware
 
-validator中间件用于对query和body数据的校验和转换，在ts中，也可以对数据类型进行声明
+The validator middleware is used to check and convert query and body data. In ts, the data type can also be declared
 
 ## vquery & vbody
 
-validator 提供了vbody和vquery两个工具方法，可以在 context 中获取到。
+validator provides two tool methods, vbody and vquery, which can be obtained in context.
 
-类型声明如下：
+The type declaration is as follows:
 
 ```ts
 type IValidTemplate = {
-    [prop in string]: IValidFormat | [IValidFormat, IValidRule];
+     [prop in string]: IValidFormat | [IValidFormat, IValidRule];
 }
 
 type IValidFunc = <
-    D extends IValidTemplate = IValidTemplate
+     D extends IValidTemplate = IValidTemplate
 >(template: D) => ({
-    [prop in keyof D]: IFormatMap[(D[prop] extends string ? D[prop]: D[prop][0])];
+     [prop in keyof D]: IFormatMap[(D[prop] extends string ? D[prop]: D[prop][0])];
 } & {
-    [prop in string]: any;
+     [prop in string]: any;
 });
 
 interface IValidatorHelper {
-    vquery: IValidFunc;
-    vbody: IValidFunc;
+     vquery: IValidFunc;
+     vbody: IValidFunc;
 }
 ```
 
-vquery和vbody分别用于获取校验和转换后的query和body
+vquery and vbody are used to obtain the query and body after the checksum conversion
 
-## 基础使用
+## Basic usage
 
-以vquery为例举一个例子：
+Take vquery as an example:
 
 ```js
 import { Sener, Router } from 'sener';
 
 const router = new Router({
-    '/demo': ({ vquery }) => {
-        const query = vquery({
-            nickname: [ 'string', 'required' ],
-            age: [ 'number', 'required' ],
-            weight: 'number', 
-        });
-        return { data: query };
-    },
+     '/demo': ({ vquery }) => {
+         const query = vquery({
+             nickname: ['string', 'required'],
+             age: [ 'number', 'required' ],
+             weight: 'number',
+         });
+         return { data: query };
+     },
 });
 
 new Sener({
-  middlewares: [router],
+   middlewares: [router],
 });
 ```
 
-vquery 函数接受一个模板，键为query中需要的属性
+The vquery function accepts a template whose keys are the attributes required in the query
 
-值可以传入格式化类型(IValidFormat) 和 检验规则（IValidRule）
+Values can be passed in format type (IValidFormat) and validation rule (IValidRule)
 
 ```ts
 type IValidFormat = 'number' | 'string' | 'boolean' | 'any';
 type IValidRule = 'required' | 'optional' | RegExp | ((v: any, formatValue: any) => boolean);
 ```
 
-当值为数组是，第一位会被解析为 格式化类型，第二位会被解析为 检验规则
+When the value is an array, the first digit will be parsed as the format type, and the second digit will be parsed as the inspection rule
 
-当值为字符串时，会被解析为 格式化类型，校验规则为默认值 optional
+When the value is a string, it will be parsed as a format type, and the validation rule is the default value optional
 
-## 正则和函数校验
+## Regex and function validation
 
-IValidRule 支持正则表达式和函数，当为函数式，参数第一个为原始值，第二个为格式化之后的值
+IValidRule supports regular expressions and functions. When it is functional, the first parameter is the original value, and the second is the formatted value
 
 ```js
 vquery({
-    nickname: [ 'string', /[a-z]{8}/i ],
-    age: [ 'number', (v, fv)=>fv >= 18 ],
-    weight: 'number', 
+     nickname: [ 'string', /[a-z]{8}/i ],
+     age: [ 'number', (v, fv)=>fv >= 18 ],
+     weight: 'number',
 });
 ```
 
-当校验失败时，会返回一个404响应，可以通过 Sener的onerror参数进行拦截处理
+When the verification fails, a 404 response will be returned, which can be intercepted by Sener's onerror parameter
 
-当使用ts时，返回的query和body会根据template获得友好的类型支持
-
-
-
-
+When using ts, the returned query and body will get friendly type support according to the template

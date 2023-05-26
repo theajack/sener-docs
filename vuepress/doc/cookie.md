@@ -1,184 +1,181 @@
 <!--
- * @Author: chenzhongsheng
- * @Date: 2023-05-14 14:48:02
- * @Description: Coding something
+  * @Author: chenzhongsheng
+  * @Date: 2023-05-14 14:48:02
+  * @Description: Coding something
 -->
-# cookie 中间件
+# cookie middleware
 
-cookie 为内置中间件，用于在服务端获取或设置cookie
+Cookie is a built-in middleware used to get or set cookies on the server side
 
-## 基础使用
+## Basic usage
 
 ```js
 import {Sener, Cookie, Router} from 'sener'
 const router = new Router({
-    '/demo': ({ cookie }) => {
-        const value = cookie.get('test');
-        cookie.set('test', value+'_tail');
-        return { data: {value} };
-    },
+     '/demo': ({ cookie }) => {
+         const value = cookie. get('test');
+         cookie.set('test', value+'_tail');
+         return { data: {value} };
+     },
 });
 
 new Sener({
-  middlewares: [router, new Cookie()],
+   middlewares: [router, new Cookie()],
 });
 ```
 
-## 构造函数
+## Constructor
 
-Cookie 中间件支持传入一个cookieOptions，用来指定cookie的默认配置项
+Cookie middleware supports passing in a cookieOptions to specify the default configuration items for cookies
 
-cookie.get 或 set 方法也可以传入这些配置项，get/set中传入的options会覆盖默认的option
+The cookie.get or set method can also pass in these configuration items, and the options passed in get/set will override the default options
 
-以下为Cookie options的声明
+The following is the declaration of Cookie options
 
 ```ts
 interface ICookieOptions {
-    value?: any;
-    expire?: number;
-    path?: string;
-    domain?: string; // default: location.host
-    secure?: boolean; // default: false
-    sameSite?: ICookieSameSite; // default: Lax
-    priority?: ICookiePriority; // default: Medium
-    sameParty?: boolean; // default: false
+     value?: any;
+     expire?: number;
+     path?: string;
+     domain?: string; // default: location.host
+     secure?: boolean; // default: false
+     sameSite?: ICookieSameSite; // default: Lax
+     priority?: ICookiePriority; // default: Medium
+     sameParty?: boolean; // default: false
 }
 ```
 
 ```js
 new Cookie({
-    // ...
+     //...
 })
 ```
 
 ## cookie api
 
-以下为 context.cookie 对象的类型声明
+The following is the type declaration of the context.cookie object
 
 ```ts
 declare class CookieClient {
-    private _cookie;
-    request: IncomingMessage;
-    response: IResponse;
-    private _options;
-    constructor(request: IncomingMessage, response: IResponse, options?: ICookieOptions);
-    get(key: string): string;
-    get<T extends string[]>(key: T): {
-        [prop in keyof T]: string;
-    };
-    getResponseCookie(key: string): string;
-    getResponseCookie<T extends string[]>(key: T): {
-        [prop in keyof T]: string;
-    };
-    set(key: string | Record<string, ICookieValue>, value?: ICookieValue, options?: ICookieOptions): void;
-    remove(key: string | string[]): void;
-    expire: typeof countExpire;
+     private_cookie;
+     request: IncomingMessage;
+     response: IResponse;
+     private_options;
+     constructor(request: IncomingMessage, response: IResponse, options?: ICookieOptions);
+     get(key: string): string;
+     get<T extends string[]>(key: T): {
+         [prop in keyof T]: string;
+     };
+     getResponseCookie(key: string): string;
+     getResponseCookie<T extends string[]>(key: T): {
+         [prop in keyof T]: string;
+     };
+     set(key: string | Record<string, ICookieValue>, value?: ICookieValue, options?: ICookieOptions): void;
+     remove(key: string | string[]): void;
+     expire: typeof countExpire;
 }
 declare function countExpire(value: string | number): number;
 ```
 
-介绍几个主要的方法：
+Introduce several main methods:
 
-### get方法
+### get method
 
-get方法用于获取客户端的cookie
+The get method is used to obtain the client's cookie
 
-使用方式非常简单
+very easy to use
 
 ```js
-cookie.get(name);
-// 获取多个cookie
-cookie.get([name1, name2])
+cookie. get(name);
+// get multiple cookies
+cookie. get([name1, name2])
 ```
 
-### set方法
+### set method
 
-set方法用于设置响应headers中的set-cookie字段，使用方式如下
+The set method is used to set the set-cookie field in the response headers, as follows
 
-1. 设置单个cookie
+1. Set a single cookie
 
 ```js
 cookie.set(name, value);
 ```
 
-传入options，options参考 ICookieOptions
+Pass in options, options refer to ICookieOptions
 
 ```js
 cookie.set(name, value, {
-    // ...
+     //...
 });
 ```
 
 
-2. 设置多个cookie
+2. Set multiple cookies
 
 ```js
 cookie.set({
-    name: value,
-    name2: value2
+     name: value,
+     name2: value2
 });
 ```
 
-传入options，options参考 ICookieOptions
+Pass in options, options refer to ICookieOptions
 
 ```js
 cookie.set({
-    name: value,
-    name2: value2
+     name: value,
+     name2: value2
 }, {
-    // ...
+     //...
 });
 ```
 
-### remove方法
+### remove method
 
-remove 方法用于删除cookie，使用方式如下
-
-```js
-cookie.remove(name);
-// 删除多个
-cookie.remove([name, name1]);
-```
-
-### expire方法
-
-expire 方法用来计算cookie过期时间
+The remove method is used to delete cookies, as follows
 
 ```js
-cookie.set(name, value, {
-    expire: cookie.expire(1000)
-})
+cookie. remove(name);
+// delete multiple
+cookie. remove([name, name1]);
 ```
 
-当 expire 传入 number时，表示 n 毫秒之后过期
+### expire method
 
-当传入 字符串时，可以根据末尾表示表示不同的时间，如 1m 表示一分钟
-
-标识符有以下7中
-
- 1. s: 秒
- 2. m: 分钟
- 3. h: 小时
- 4. d: 天
- 5. w: 星期
- 6. M: 月
- 7. y: 年
+The expire method is used to calculate the cookie expiration time
 
 ```js
 cookie.set(name, value, {
-    expire: cookie.expire('1d') // 1 天后过期
+     expire: cookie.expire(1000)
 })
 ```
 
-### getResponseCookie方法
+When expire passes in number, it means that it expires after n milliseconds
 
-getResponseCookie 用于获取设置的cookie，使用方式与 get 方法类似
+When a string is passed in, different times can be expressed according to the end, such as 1m means one minute
+
+The identifier has the following 7
+
+  1. s: seconds
+  2. m: minutes
+  3. h: hours
+  4. d: days
+  5. w: day of the week
+  6. M: month
+  7. y: year
 
 ```js
-cookie.getResponseCookie(name);
-// 获取多个cookie
-cookie.getResponseCookie([name1, name2])
+cookie.set(name, value, {
+     expire: cookie.expire('1d') // expires in 1 day
+})
 ```
 
+### getResponseCookie method
 
+getResponseCookie is used to get the set cookie, similar to the get method
 
+```js
+cookie. getResponseCookie(name);
+// get multiple cookies
+cookie. getResponseCookie([name1, name2])
+```

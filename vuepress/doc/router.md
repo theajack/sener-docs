@@ -1,42 +1,42 @@
 <!--
- * @Author: chenzhongsheng
- * @Date: 2023-05-14 13:15:35
- * @Description: Coding something
+  * @Author: chenzhongsheng
+  * @Date: 2023-05-14 13:15:35
+  * @Description: Coding something
 -->
-# Router 中间件
+# Router middleware
 
-## 使用
+## use
 
-router中间件是最为重要也是最为基础的一个中间件，它的功能是用来进行路由分发
+Router middleware is the most important and basic middleware, its function is to distribute routes
 
-以下是一个简单的使用
+The following is a simple use
 
 ```js
 import { Sener, Router } from 'sener';
 
 const router = new Router({
-    '/demo': ({ query }) => {
-        // or: 'get:/demo': ({ query }) => { // get: prefix can be ignored
-        query.message = 'from get';
-        return { data: query };
-        // Custom headers or statusCode
-        // return { data: query, headers: {}, statusCode: 200  };
-    },
-    'post:/demo': async ({ body }) => {
-        body.message = 'from post'
-        return { data: body };
-    },
+     '/demo': ({ query }) => {
+         // or: 'get:/demo': ({ query }) => { // get: prefix can be ignored
+         query.message = 'from get';
+         return { data: query };
+         // Custom headers or statusCode
+         // return { data: query, headers: {}, statusCode: 200 };
+     },
+     'post:/demo': async ({ body }) => {
+         body. message = 'from post'
+         return { data: body };
+     },
 });
 
 new Sener({
-  port: 9000,
-  middlewares: [router],
+   port: 9000,
+   middlewares: [router],
 });
 ```
 
-需要注意的是 router 中间件一般建议放在第一个位置
+It should be noted that the router middleware is generally recommended to be placed in the first position
 
-也可以使用json声明，以方便按模块定义路由规则，如果使用ts可以搭配接口使用
+You can also use json declaration to facilitate the definition of routing rules by module. If you use ts, you can use it with interfaces
 
 ```ts
 import { IRouter } from 'sener';
@@ -46,13 +46,13 @@ const comment: IRouter = {/* ... */};
 const router = new Router(user, comment);
 ```
 
-## 路由映射
+## route map
 
-Router 中间件接受一个路由映射，路由映射的值可以为函数或者对象
+The Router middleware accepts a route map, and the value of the route map can be a function or an object
 
 ### key
 
-映射的key值为路由的url，url的格式如下：
+The key value of the mapping is the url of the route, and the format of the url is as follows:
 
 ```
 [MetaInfo][Method:]<Url>
@@ -60,203 +60,203 @@ Router 中间件接受一个路由映射，路由映射的值可以为函数或�
 
 1. MetaInfo
 
-路由元信息为可选部分，如果有的话会被解析成context中的meta属性，可供所有的中间件来进行处理
+The routing meta information is an optional part, if any, it will be parsed into the meta attribute in the context, which can be processed by all middleware
 
-meta的格式为 [name1=value1&name2=value2]，其中value部分如果为空，则会被赋值为 true，如 `[a&b=2]` 会被解析为 {a: true, b: '2'}
+The format of meta is [name1=value1&name2=value2], if the value part is empty, it will be assigned a value of true, such as `[a&b=2]` will be parsed as {a: true, b: '2'}
 
-以下是一个代码示例
-
-```js
-const router = new Router({
-    '[a&b=2]/demo': ({ meta }) => {
-        // meta: {a: true, b: '2'}
-    },
-});
-```
-
-注：当路由映射的值为对象时，key上不需要加入meta部分
-
-2. Method 为路由方法，也是可选参数，默认值为get，需要使用`:`分割
+Here is a code example
 
 ```js
 const router = new Router({
-    '/aa': (ctx) => {},
-    'get:/bb': (ctx) => {},
-    'post:/cc': (ctx) => {},
-    'delete:/dd': (ctx) => {},
+     '[a&b=2]/demo': ({ meta }) => {
+         // meta: {a: true, b: '2'}
+     },
 });
 ```
 
-3. Url就路由的path，该参数为必选
+Note: When the value of the routing map is an object, the meta part does not need to be added to the key
+
+2. Method is a routing method, and it is also an optional parameter. The default value is get, which needs to be separated by `:`
+
+```js
+const router = new Router({
+     '/aa': (ctx) => {},
+     'get:/bb': (ctx) => {},
+     'post:/cc': (ctx) => {},
+     'delete:/dd': (ctx) => {},
+});
+```
+
+3. Url is the path of the route, this parameter is mandatory
 
 ### value
 
-路由映射的值可以使函数或对象，当为对象时，key中不可以加入meta部分，使用对象定义路由的好处是meta可以传入复杂类型的数据
+The value of the routing map can be a function or an object. When it is an object, the meta part cannot be added to the key. The advantage of using an object to define a route is that meta can pass in complex types of data
 
 ```ts
-// 当为函数时
+// when it is a function
 export type IRouterHandler = (
-    context: ISenerContext,
-) => IPromiseMayBe<IHookReturn>; // IHookReturn 可以参考中间件章节
+     context: ISenerContext,
+) => IPromiseMayBe<IHookReturn>; // IHookReturn can refer to the middleware chapter
 
-// 当为对象时
+// when it is an object
 export interface IRouterHandlerData {
-    handler: IRouterHandler;
-    meta: IJson;
+     handler: IRouterHandler;
+     meta: IJson;
 }
 ```
 
-`IRouterHandler` 的参数是 context 对象，返回值即为中间件的返回值，处理逻辑与中间件一致
+The parameter of `IRouterHandler` is the context object, and the return value is the return value of the middleware, and the processing logic is consistent with that of the middleware
 
-以下简单的例子
+The following simple example
 
 ```js
 const router = new Router({
-    '/aa': (ctx) => {},
-    '/bb': {
-        meta: {},
-        handler: (ctx) => {},
-    },
+     '/aa': (ctx) => {},
+     '/bb': {
+         meta: {},
+         handler: (ctx) => {},
+     },
 });
 ```
 
-## 私有路由
+## Private routing
 
-私有路由为一类特殊的路由，该种路由的入参与返回值与一般路有类似，区别是该种路由更类似于工具方法，不会被外部请求所访问，主要专门用于内部使用 `route` helper来调用
+Private routing is a special type of routing. The entry and return value of this type of routing is similar to that of general routing. The difference is that this type of routing is more similar to tool methods and will not be accessed by external requests. It is mainly used for internal use `route ` helper to call
 
 ```js
 const router = new Router({
-    '#userCheck': (ctx) => {},
+     '#userCheck': (ctx) => {},
 });
 ```
 
 ## router helper
 
-router 中间件会注入以下三个 helper
+The router middleware will inject the following three helpers
 
 ```ts
 interface IRouterHelper {
-    meta: IJson;
-    route(
-        url: string, data?: Partial<ISenerContext>,
-    ): IPromiseMayBe<IHookReturn>;
-    index: ()=>number;
+     meta: IJson;
+     route(
+         url: string, data?: Partial<ISenerContext>,
+     ): IPromiseMayBe<IHookReturn>;
+     index: ()=>number;
 }
 ```
 
 ### meta
 
-meta在前文中已经做过了介绍，主要是用来写入路由的元信息供自身或其他hook中使用
+Meta has been introduced in the previous article, mainly used to write the meta information of the route for use in itself or other hooks
 
 ```js
 const router = new Router({
-    '/test': ({meta, index, route}) => {},
+     '/test': ({meta, index, route}) => {},
 });
 ```
 
 ### route
 
-route方法用来重定向到其他路由 或 调用其他请求拿到返回结果，该方法可以访问私有路由
+The route method is used to redirect to other routes or call other requests to get the return result. This method can access private routes
 
 ```js
 const router = new Router({
-    '#test': () => {},
-    'get:/test': () => {},
+     '#test': () => {},
+     'get:/test': () => {},
 
-    '/route-test': ({route}) => {
-        return route('/route-test')
-    },
-    '/route-test2': ({route}) => {
-        const data = route('/route-test');
-        // ... do something
-        return {data};
-    },
+     '/route-test': ({route}) => {
+         return route('/route-test')
+     },
+     '/route-test2': ({route}) => {
+         const data = route('/route-test');
+         // ... do something
+         return {data};
+     },
 });
 ```
 
 ### index
 
-index 方法会生成一个当前请求过程中递增的id，一般可以用来生成一些表示index的场景
+The index method will generate an id that is incremented during the current request process, which can generally be used to generate some scenarios that represent the index
 
 ```js
 const router = new Router({
-    '/test': ({index}) => {
-        const data1 = {index: index()};
-        const data2 = {index: index()};
-        return success({data1, data2})
-    },
+     '/test': ({index}) => {
+         const data1 = {index: index()};
+         const data2 = {index: index()};
+         return success({data1, data2})
+     },
 });
 ```
 
-## 工具方法
+## Tool method
 
 1. error & success
    
-路由中可以使用 error 和 success 方法封装路由的返回值，定义如下
+Routing can use the error and success methods to encapsulate the return value of the route, defined as follows
 
 ```ts
 function error<T = null>(msg?: string, code?: number, data?: T): IMiddleWareResponseReturn<IRouterReturn<T>>
 function success<T = any>(data?: T, msg?: string, extra?: {}): IMiddleWareResponseReturn<IRouterReturn<T>>
 ```
 
-以下是一个简单的使用例子
+The following is a simple usage example
 
 ```js
 import {Router, error, success} from 'sener'
 const router = new Router({
-    '/test': () => {
-        const data = something();
-        if(data === null) return error();
-        return success({data});
-    },
+     '/test': () => {
+         const data = something();
+         if(data === null) return error();
+         return success({data});
+     },
 });
 ```
 
-2. responseXX 方法
+2. The responseXX method
 
-路由handler中可以使用 responseXX 方法标识请求已经被响应，且返回值将响应结果注入 context 中。
+The responseXX method can be used in the routing handler to identify that the request has been responded, and the return value will inject the response result into the context.
 
 ```js
 import {Router, error, success} from 'sener'
 const router = new Router({
-    '/test': ({send404}) => {
-        const isLogin = something();
-        if(!isLogin) {
-            return responseXX();
-        }
-        return success({data});
-    },
+     '/test': ({send404}) => {
+         const isLogin = something();
+         if(!isLogin) {
+             return responseXX();
+         }
+         return success({data});
+     },
 });
 ```
 
-后续中间件遇到已被响应的标识之后会跳过hook，如果要处理已经标识过的请求，可以将 acceptResponded 值设置为 true。
+Subsequent middleware will skip the hook after encountering an identified response. If you want to process an identified request, you can set the acceptResponded value to true.
 
 ```js
 class CustomMiddle extends MiddleWare {
-    acceptResponded = true;
-    enter(ctx){
-    }
+     acceptResponded = true;
+     enter(ctx){
+     }
 }
 ```
 
-3. markReturned 方法
+3. markReturned method
 
-如果第三方中间件已经自行使用 response 对象进行了发送请求响应，那么后续 sener 再次发送或者设置header会打印一个错误。
+If the third-party middleware has already used the response object to send the request response, then the subsequent sender will send it again or set the header to print an error.
 
-为了防止这种情况，可以使用 markReturned 方法表示请求已提前返回响应，不需要由sener统一发送响应。同时后续中间件遇到已被发送响应的标识之后会跳过hook，如果要处理已经标识过的请求，可以将 acceptReturned 值设置为 true。
+In order to prevent this situation, you can use the markReturned method to indicate that the request has returned a response in advance, and the response does not need to be sent uniformly by the sener. At the same time, the subsequent middleware will skip the hook after encountering the identification of the response that has been sent. If you want to process the identified request, you can set the value of acceptReturned to true.
 
 ```js
 class CustomMiddle1 extends MiddleWare {
 
-    enter({response, markReturned}){
-        response.write('xxx');
-        response.end();
-        markReturned();
-    }
+     enter({response, markReturned}){
+         response.write('xxx');
+         response. end();
+         markReturned();
+     }
 }
 class CustomMiddle2 extends MiddleWare {
-    acceptReturned = true;
-    enter({response, markReturned}){
-    }
+     acceptReturned = true;
+     enter({response, markReturned}){
+     }
 }
 ```

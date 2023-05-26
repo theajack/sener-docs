@@ -1,13 +1,13 @@
 <!--
- * @Author: chenzhongsheng
- * @Date: 2023-05-14 14:49:08
- * @Description: Coding something
+  * @Author: chenzhongsheng
+  * @Date: 2023-05-14 14:49:08
+  * @Description: Coding something
 -->
-# form中间件
+# form middleware
 
-## 安装使用
+## Install and use
 
-form中间件为独立中间件，需要单独安装使用
+The form middleware is an independent middleware and needs to be installed and used separately
 
 ```
 npm i sener-form
@@ -18,79 +18,79 @@ import { Form } from 'sener-form';
 new Form();
 ```
 
-## 基础使用
+## Basic usage
 
-form中间件用于对 form-data类型的数据进行处理，主要用于文件上传
+The form middleware is used to process the data of form-data type, mainly used for file upload
 
 ```js
 import { Sener, Router } from 'sener';
 import { Form } from 'sener-form';
 
 const router = new Router({
-    '/demo': ({ formData, files }) => {
-        // formData 用于获取数据，map类型
-        // files 用于获取文件对象，map类型
-        return { data: {success: true} };
-    },
+     '/demo': ({ formData, files }) => {
+         // formData is used to get data, map type
+         // files are used to get file objects, map type
+         return { data: {success: true} };
+     },
 });
 
 new Sener({
-  middlewares: [router, new Form()],
+   middlewares: [router, new Form()],
 });
 ```
 
-## 构造参数
+## Construction parameters
 
-form 中间件支持以下配置：
+The form middleware supports the following configurations:
 
 ```ts
 interface IJsonOptions {
-    dir?: string, // dir 用于设置文件上传文件的保存目录，默认为 './public/upload' 没有会自行创建
+     dir?: string, // dir is used to set the storage directory of file upload files, the default is './public/upload', it will not be created by itself
 }
 ```
 
 ## form context
 
-form 中间件指定了两个 context
+The form middleware specifies two contexts
 
 ```ts
 interface ISenerHelper {
-    files: Files; // files 表示获取到的 formData 中的文件map对象
-    formData: IJson; // formData 表示 formData 中的其他数据
+     files: Files; // files represent the file map object in the obtained formData
+     formData: IJson; // formData represents other data in formData
 }
 ```
 
-以下是一个简单示例：
+Here is a simple example:
 
-假如客户端上传的body是一个如下的formdata
+If the body uploaded by the client is a formdata as follows
 
 ```
 FormData({
-    key: 'test', // 模拟一个普通的值
-    img: File, // 模拟上传一张图片
+     key: 'test', // simulate a normal value
+     img: File, // Simulate uploading an image
 })
 ```
 
 ```js
 new Router({
-    'post:/upload': ({ formData, files }) => {
-        // formData => {key: 'test'}
-        // files => {img: SenerFile}
-        files = transformFilePath(files); // 将本地目录转换成公网url
-        return success({ formData, files }, '文件上传成功');
-    }
+     'post:/upload': ({ formData, files }) => {
+         // formData => {key: 'test'}
+         // files => {img: SenerFile}
+         files = transformFilePath(files); // convert local directory to public network url
+         return success({ formData, files }, 'file uploaded successfully');
+     }
 });
 ```
 
-以下为 SenerFile 对象的结构
+The following is the structure of the SenerFile object
 
 ```ts
 interface SenerFile {
-    size: number; // 文件大小 单位为 byte
-    filepath: string; // 文件的本地目录：如 /public/upload/2023_05/xxxx
-    mimetype: string; // 文件 mimetype 如 image/png
-    mtime: string; // 文件 mtime "2023-05-21T10:21:32.060Z"
-    newFilename: string; // 新文件名
-    originalFilename: string; // 原始文件名
+     size: number; // file size unit is byte
+     filepath: string; // The local directory of the file: such as /public/upload/2023_05/xxxx
+     mimetype: string; // file mimetype such as image/png
+     mtime: string; // file mtime "2023-05-21T10:21:32.060Z"
+     newFilename: string; // new filename
+     originalFilename: string; // original filename
 }
 ```

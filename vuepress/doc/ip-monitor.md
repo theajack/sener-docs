@@ -1,80 +1,80 @@
 <!--
- * @Author: chenzhongsheng
- * @Date: 2023-05-14 14:48:50
- * @Description: Coding something
+  * @Author: chenzhongsheng
+  * @Date: 2023-05-14 14:48:50
+  * @Description: Coding something
 -->
-# IP-Monitor中间件
+# IP-Monitor middleware
 
-## 基础使用
+## Basic usage
 
-IP-Monitor中间件用于识别相同ip地址的频繁访问，从而对可疑IP进行风控。
+The IP-Monitor middleware is used to identify frequent visits of the same ip address, so as to control the risk of suspicious IP.
 
-该中间件支持设置识别模式、检测回调和处理回调，基本使用如下：
+This middleware supports setting recognition mode, detection callback and processing callback, the basic usage is as follows:
 
 ```js
 import {Sener, IpMonitor} from 'sener';
 
 new Sener({
-    middlewares: [new IpMonitor()],
+     middlewares: [new IpMonitor()],
 });
 ```
 
-IpMonitor 接收如下类型的参数：
+IpMonitor accepts parameters of the following types:
 
 ```ts
 interface IIpMonitorOptions {
-    range?: number; // 表示检测访问的时间周期 单位为s
-    times?: number; // 表示检测到相同ip访问的次数
-    oncheck?: (ctx: ISenerContext, ) => boolean; // 自定义检测策略
-    handler?: (ctx: ISenerContext) => IHookReturn; // 自定义检测命中后的处理逻辑
+     range?: number; // Indicates the time period for detecting access, the unit is s
+     times?: number; // Indicates the number of times the same ip access was detected
+     oncheck?: (ctx: ISenerContext, ) => boolean; // custom detection strategy
+     handler?: (ctx: ISenerContext) => IHookReturn; // Customize the processing logic after the detection hit
 }
 ```
 
-## 配置风控策略
+## Configure risk control strategy
 
-IP-Monitor 默认的风控策略是 10s 内访问 30 次被认为是高频访问，对改ip的所有请求直接返回404，开发者可以通过参数调整这两个数值。
+The default risk control strategy of IP-Monitor is that 30 visits within 10s are considered high-frequency visits, and all requests to change IP will directly return 404. Developers can adjust these two values ​​through parameters.
 
-以下代码表示当相同ip 30s内连续访问100次是被认为是高频访问：
+The following code indicates that when the same ip is visited 100 times within 30s, it is considered a high-frequency visit:
 
 ```js
 import {IpMonitor} from 'sener';
 
 new IpMonitor({
-    range: 30,
-    times: 100,
+     range: 30,
+     times: 100,
 }),
 ```
 
-## 自定义风控策略
+## Custom risk control strategy
 
-开发者可以通过 oncheck 属性自定义风控策略
+Developers can customize the risk control strategy through the oncheck attribute
 
 ```ts
 import {IpMonitor} from 'sener';
 
 new IpMonitor({
-    oncheck({ip, url}: ISenerContext){
-        // 此处仅仅演示一个简单的例子
-        return url === '/demo' && ip === 'xx.xx.xx.xx';
-    }
+     oncheck({ip, url}: ISenerContext){
+         // Here is just a simple example
+         return url === '/demo' && ip === 'xx.xx.xx.xx';
+     }
 }),
 ```
 
-注：开启oncheck参数之后，默认策略将失效，range和times参数也将失效
+Note: After enabling the oncheck parameter, the default strategy will be invalid, and the range and times parameters will also be invalid
 
-## 自定义处理策略
+## Custom processing strategy
 
-IP-Monitor 的默认策略是检测到高频访问之后就返回404，开发者可以通过handler参数自定义处理策略
+The default strategy of IP-Monitor is to return 404 after detecting high-frequency access. Developers can customize the processing strategy through the handler parameter
 
 ```ts
 import {IpMonitor} from 'sener';
 
 new IpMonitor({
-    handler({ip, send404}: ISenerContext): IHookReturn{
-        saveRiskIP(ip); // 做一些自定义的处理
-        return send404('自定义错误信息');
-        // 也可以返回一个正常的返回值 具体可以参考router中间件的返回
-        // return success({data: 'xxx'}) // success 为工具方法 可以参考前文
-    }
+     handler({ip, send404}: ISenerContext): IHookReturn{
+         saveRiskIP(ip); // Do some custom processing
+         return send404('custom error message');
+         // It can also return a normal return value. For details, please refer to the return of router middleware
+         // return success({data: 'xxx'}) // success is a tool method, please refer to the previous article
+     }
 }),
 ```

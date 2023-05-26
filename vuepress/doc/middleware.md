@@ -1,105 +1,105 @@
 <!--
- * @Author: chenzhongsheng
- * @Date: 2023-05-13 17:15:15
- * @Description: Coding something
+  * @Author: chenzhongsheng
+  * @Date: 2023-05-13 17:15:15
+  * @Description: Coding something
 -->
 
-# 中间件
+# middleware
 
-中间件是 Sener 中的核心概念，Sener 本身只提供一个解析请求的处理响应的管道，具体的功能交由不同的中间件通过hooks来实现
-
-```js
-new Sener({
-  middlewares: [mw1, mw2],
-})
-```
-
-注：middlewares 可以传入null，null值会被忽略而不会报错，在以下场景中可以减少一定代码量
+Middleware is the core concept in Sener. Sener itself only provides a pipeline for parsing requests and processing responses. The specific functions are implemented by different middleware through hooks
 
 ```js
 new Sener({
-  middlewares: [
-    isDev ? devMiddleware: null,
-  ],
+   middlewares: [mw1, mw2],
 })
 ```
 
-## 概念
+Note: middlewares can pass in null, and the null value will be ignored without reporting an error. In the following scenarios, a certain amount of code can be reduced
 
-Sener中间件是一个包含某些特定属性和hook函数的对象，以下是一个中间件的接口
+```js
+new Sener({
+   middlewares: [
+     isDev? devMiddleware: null,
+   ],
+})
+```
+
+## concept
+
+Sener middleware is an object that contains certain properties and hook functions. The following is a middleware interface
 
 ```ts
 export interface IMiddleWare {
-    name?: string;
-    acceptOptions?: boolean;
-    acceptResponded?: boolean;
-    acceptReturned?: boolean;
-    helper?(): Record<string, any>;
-    init?: (ctx: ISenerContext) => IMiddleWareInitReturn;
-    enter?: (ctx: ISenerContext) => IMiddleWareEnterReturn;
-    leave?: (ctx: ISenerContext) => IPromiseMayBe<void>;
+     name?: string;
+     acceptOptions?: boolean;
+     acceptResponded?: boolean;
+     acceptReturned?: boolean;
+     helper?(): Record<string, any>;
+     init?: (ctx: ISenerContext) => IMiddleWareInitReturn;
+     enter?: (ctx: ISenerContext) => IMiddleWareEnterReturn;
+     leave?: (ctx: ISenerContext) => IPromiseMayBe<void>;
 }
 ```
 
-以下为属性的详细介绍，其中所有的属性和方法都是可选的
+The following is a detailed introduction to attributes, where all attributes and methods are optional
 
-1. name: 中间件名称
-2. acceptOptions: 是否接受options method，默认为false，即options method 不会 传入到hook中
-3. acceptResponded: 是否接受已经标为 responded（即已经构造过响应） 的context。默认值为false
-4. acceptReturned: 是否接受已经标为 returned （即已经返回过响应）的context。默认值为false
-5. helper: 生成工具的hook，在中间件被use之后就会被执行，sener会将helper返回结果注入到context中
-6. init: 初始化hook，该hook会最先执行，一般建议插入一些自定义context或者修改context内容。
-7. enter: 请求进入的hook，一般建议在这个中间件中处理响应，返回响应数据。
-8. leave: 请求离开的hook，此时请求响应已发送给客户端，所以该hook的返回值无意义，一般用于做一些状态销毁的操作，如关闭数据库连接。
+1. name: middleware name
+2. acceptOptions: Whether to accept the options method, the default is false, that is, the options method will not be passed into the hook
+3. acceptResponded: Whether to accept the context that has been marked as responded (that is, the response has been constructed). The default value is false
+4. acceptReturned: Whether to accept the context that has been marked as returned (that is, the response has been returned). The default value is false
+5. helper: The hook of the generated tool will be executed after the middleware is used, and the sener will inject the result returned by the helper into the context
+6. init: Initialize the hook, which will be executed first. It is generally recommended to insert some custom context or modify the context content.
+7. enter: The hook for the request to enter. It is generally recommended to process the response in this middleware and return the response data.
+8. leave: The hook that requests to leave. At this time, the request response has been sent to the client, so the return value of this hook is meaningless. It is generally used to do some state destruction operations, such as closing the database connection.
 
-## 洋葱模型
+## onion model
 
-中间件有三个hook，hook的执行顺序遵循洋葱模型，`解析请求` -> `init` -> `enter` -> `返回响应` -> `leave`。如下图所示：
+The middleware has three hooks, and the execution order of the hooks follows the onion model, `parse request` -> `init` -> `enter` -> `return response` -> `leave`. As shown below:
 
 ![Sener-Hooks](https://shiyix.cn/images/sener-hooks.png)
 
-该模型的好处是可以保证先进入的中间件后离开，可以固定不同组件的执行优先级
+The advantage of this model is that the middleware that enters first can be guaranteed to leave, and the execution priority of different components can be fixed
 
-## hook逻辑
+## hook logic
 
 ### helper
 
-helper 用于注入一下静态的工具方法或状态到context中，该 hook 在中间件被use之后就会执行，且只会执行这一次，helper返回的一个json，sener会将返回值注入到每次请求的context中
+The helper is used to inject a static tool method or state into the context. The hook will be executed after the middleware is used, and it will only be executed this time. A json returned by the helper, the sener will inject the return value into each request in the context
 
-### init
+###init
 
-init hook 是中间件在请求过程中的初始化hook，一般用于修改context或自定义context，一般不建议做与请求响应相关的操作。
+The init hook is the initialization hook of the middleware during the request process. It is generally used to modify the context or customize the context. It is generally not recommended to do operations related to request responses.
 
-init 返回值类型为 Partial&lt;ISenerContext> 
+The return value type of init is Partial&lt;ISenerContext>
 
-### enter
+###enter
 
-enter hook 用于中间件状态的初始化或处理请求响应。
+The enter hook is used to initialize middleware state or process request response.
 
-enter 返回值类型为 Partial&lt;ISenerContext> 
+enter The return value type is Partial&lt;ISenerContext>
 
-### leave
+###leave
 
-leave hook 在请求响应被发送到客户端之后执行，一般用于销毁中间件的某些状态，比如断开数据库连接等。leave中间件不需要有任何返回值
+The leave hook is executed after the request response is sent to the client, and is generally used to destroy some state of the middleware, such as disconnecting the database connection. The leave middleware does not need to have any return value
 
-> 注：一般建议在 enter hook中处理与响应相关的context，即 data，statusCode，headers，success 四个属性，包裹调用context的工具方法。建议在init hook中操作或自定义其他context。
+> Note: It is generally recommended to process the context related to the response in the enter hook, that is, the four attributes of data, statusCode, headers, and success, and wrap the tool method of calling the context. It is recommended to operate or customize other contexts in the init hook.
 
-## 自定义中间件
+## Custom middleware
 
-除了使用官方的中间件之外，开发者也可以定义自己的中间件，有两种定义方式：
+In addition to using official middleware, developers can also define their own middleware, there are two ways to define:
 
-1. 第一种是推荐方式，继承 MiddleWare 抽象类
+1. The first is the recommended way, inheriting the MiddleWare abstract class
 
 ```ts
 import { MiddleWare } from 'sener';
 export class CustomMiddle extends MiddleWare {
-    // 声明hook等
+     // Declare hooks, etc.
 }
 
 const customMiddle = new CustomMiddle();
 ```
 
-2. 第二种是声明一个json作为中间件，如果是ts，可以通过 IMiddleWare 接口获得类型提示
+2. The second is to declare a json as middleware. If it is ts, you can get type hints through the IMiddleWare interface
 
 ```ts
 import { IMiddleWare } from 'sener';
@@ -108,59 +108,59 @@ const customMiddle: IMiddleWare = {
 }
 ```
 
-以下是一个自定义登录态校验的简单中间件示例
+The following is a simple middleware example for custom login status validation
 
 ```ts
 import { MiddleWare, ISenerContext, IHookReturn } from 'sener';
 
 export class LoginCheck extends MiddleWare {
-    enter (ctx: ISenerContext): IHookReturn {
-        if (!ctx.meta.tk) return; 
-        // 通过路由meta属性判断是否需要进行登录校验 此部分需要参考后续的router中间件
-        const result = checkLogin(); // 待实现
-        if (!result.success) {
-            // 将一个json类型的失败响应注入到context
-            return ctx.responseJson(result.data);
-        };
-        // 登录成功则注入uid
-        const uid = result.data.uid;
-        ctx.query.uid = uid;
-        ctx.body.uid = uid;
-    }
+     enter (ctx: ISenerContext): IHookReturn {
+         if (!ctx.meta.tk) return;
+         // Use the route meta attribute to determine whether login verification is required. This part needs to refer to the subsequent router middleware
+         const result = checkLogin(); // to be implemented
+         if (!result. success) {
+             // Inject a failure response of type json into the context
+             return ctx. responseJson(result. data);
+         };
+         // If the login is successful, inject uid
+         const uid = result.data.uid;
+         ctx.query.uid = uid;
+         ctx.body.uid = uid;
+     }
 }
 ```
 
-## 自定义context
+## Custom context
 
-以下是通过中间件自定义context的例子：
+The following is an example of customizing context through middleware:
 
 ```ts
 import { MiddleWare, ISenerContext, IHookReturn } from 'sener';
 
 export class LoginCheck extends MiddleWare {
-    init (ctx: ISenerContext): IHookReturn {
-      ctx.uid = 'xxx'; // 直接修改
-      return {
-        customArrtibute: 'xx', // 通过返回值修改
-        customHelper(){
-          return ctx.url;
-        },
-      }
-    }
+     init (ctx: ISenerContext): IHookReturn {
+       ctx.uid = 'xxx'; // modify directly
+       return {
+         customArrtibute: 'xx', // modify by return value
+         customHelper(){
+           return ctx.url;
+         },
+       }
+     }
 }
 ```
 
-## ts 声明
+## ts declaration
 
-如果使用的typescript，可以通过扩展 ISenerContext 接口来提供更友好的类型支持
+If you use typescript, you can provide more friendly type support by extending the ISenerContext interface
 
-使用以下声明可以扩展ISenerContext接口
+The ISenerContext interface can be extended using the following declaration
 
 ```ts
 declare module 'sener' {
-  interface ISenerHelper {
-    customArrtibute: {},
-    customHelper: {},
-  }
+   interface ISenerHelper {
+     customArrtibute: {},
+     customHelper: {},
+   }
 }
 ```
