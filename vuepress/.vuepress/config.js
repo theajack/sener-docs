@@ -30,7 +30,7 @@ module.exports = {
             return {
                 output: {
                     publicPath: 'https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/'
-                    // publicPath: '/docs-cn/' // debug
+                    // publicPath: '/sener-docs/' // debug
                 },
                 resolve: {
                     // 配置路径别名

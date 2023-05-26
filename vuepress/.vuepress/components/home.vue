@@ -53,13 +53,13 @@
         },
         methods: {
             start () {
-                window.location.href = '/docs-cn/guide/intro.html';
+                window.location.href = '/sener-docs/guide/intro.html';
             },
             run () {
                 initJSBox().openSample('todo-list');
             },
             install () {
-                window.location.href = '/docs-cn/guide/install.html';
+                window.location.href = '/sener-docs/guide/install.html';
             },
         },
     };

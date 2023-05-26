@@ -59,7 +59,7 @@ function main () {
         open();
     }
     function openSample (name) {
-        setUrl(`${getUrl()}&codeSrc=${location.protocol}//${location.host}/docs-cn/samples/${name}.js`);
+        setUrl(`${getUrl()}&codeSrc=${location.protocol}//${location.host}/sener-docs/samples/${name}.js`);
         open();
     }
     closeIcon.onclick = close;
