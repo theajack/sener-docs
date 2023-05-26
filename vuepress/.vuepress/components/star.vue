@@ -3,7 +3,7 @@
          @click='starGithub'>
         <div class='word glitch'>
             <div class='flash is-off'>
-                <span class='text'>前往GitHub!</span>
+                <span class='text'>Go To GitHub!</span>
             </div>
         </div>
     </div>
@@ -87,7 +87,7 @@
 .glitch .flash span:before,
 .glitch .flash span:after {
   display: block;
-  content: '给个star!';
+  content: 'Go To GitHub!';
   position: absolute;
   top: 0;
   color: #fff;

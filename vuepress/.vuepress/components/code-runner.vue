@@ -26,11 +26,11 @@
         props: {
             title: {
                 type: String,
-                default: '演示程序'
+                default: '' // 演示程序
             },
             desc: {
                 type: String,
-                default: '右侧按钮可以开启编辑|在线运行'
+                default: '' // 右侧按钮可以开启编辑|在线运行
             },
             result: {
                 type: Boolean,
