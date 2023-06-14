@@ -52,7 +52,7 @@ const env = {
      token: 'xxxxxx'
 };
 
-declare module 'sener' {
+declare module 'sener-extend' {
      interface ISenerEnv extends IEnvMap<typeof env> {}
 }
 

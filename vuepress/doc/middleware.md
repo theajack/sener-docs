@@ -157,7 +157,7 @@ If you use typescript, you can provide more friendly type support by extending t
 The ISenerContext interface can be extended using the following declaration
 
 ```ts
-declare module 'sener' {
+declare module 'sener-extend' {
    interface ISenerHelper {
      customArrtibute: {},
      customHelper: {},

@@ -259,7 +259,7 @@ const mongo = new Mongo({
      models: Cols,
 });
 
-declare module 'sener' {
+declare module 'sener-extend' {
      interface Model {
          models: typeof Cols;
      }
