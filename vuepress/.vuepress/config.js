@@ -29,7 +29,8 @@ module.exports = {
         if (NODE_ENV === 'production') {
             return {
                 output: {
-                    publicPath: 'https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/'
+                    // publicPath: 'https://cdn.jsdelivr.net/gh/theajack/sener-docs@gh-pages/'
+                    publicPath: 'https://cdn.jsdelivr.net/gh/theajack/sener-docs/docs/'
                     // publicPath: '/sener-docs/' // debug
                 },
                 resolve: {
