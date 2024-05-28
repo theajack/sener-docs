@@ -34,8 +34,6 @@ new Sener({
 });
 ```
 
-It should be noted that the router middleware is generally recommended to be placed in the first position
-
 You can also use json declaration to facilitate the definition of routing rules by module. If you use ts, you can use it with interfaces
 
 ```ts
@@ -102,7 +100,8 @@ export type IRouterHandler = (
 // when it is an object
 export interface IRouterHandlerData {
      handler: IRouterHandler;
-     meta: IJson;
+     meta?: IJson;
+     alias?: string[]; // Route alias, used to point different URLs to the same route
 }
 ```
 
@@ -115,6 +114,7 @@ const router = new Router({
      '/aa': (ctx) => {},
      '/bb': {
          meta: {},
+         alias: ['/bb1', '/bb2'], // bb1 and bb2 will also point to the current route
          handler: (ctx) => {},
      },
 });
@@ -130,33 +130,93 @@ const router = new Router({
 });
 ```
 
+## Fuzzy matching
+
+Router middleware supports fuzzy matching, that is, it can match a type of route and then distribute it according to parameters in the handler
+
+
+```js
+const router = new Router({
+     '/api/:userId': ({params}) => {
+         return {data: params.userId};
+     },
+     // Regular conditions
+     '/api2/:userId(\d+)': ({params}) => {
+         // followed by parentheses indicates that the parameters need to satisfy the regular expression, otherwise the routing will report an error
+         return {data: params.userId};
+     },
+     // Prefixed with # to represent numbers
+     '/api3/:#userId': ({params}) => {},
+     //With ! prefix indicates Boolean type
+     '/api4/:!isTrue': ({params}) => {},
+});
+```
+
+
+## Reuse route prefix
+
+Router middleware supports reusing route prefixes, that is, it can extract the prefixes of a type of route
+
+Use the createRoute method to create a set of routes with the same prefix. The use of sub-routes is consistent with the complete route. It supports method prefixes, private routes, meta, fuzzy matching, etc. The usage method is as follows
+
+```js
+import { createRoute } from 'sener';
+const router = new Router({
+     ...createRoute('/api/user', {
+         '/info': ()=>{
+             // ...
+         },
+         'post:/update': ()=>{
+             // ...
+         },
+         // ...
+     })
+});
+```
+
 ## router helper
 
-The router middleware will inject the following three helpers
+The router middleware will inject the following helpers
 
 ```ts
 interface IRouterHelper {
-     meta: IJson;
-     route(
-         url: string, data?: Partial<ISenerContext>,
-     ): IPromiseMayBe<IHookReturn>;
+     meta: IJson; // Get routing meta information
+     params: IJson; // Get parameters in route fuzzy matching
      index: ()=>number;
+     route<T extends IHookReturn = IHookReturn>(
+         url: string, data?: Partial<ISenerContext>,
+     ): IPromiseMayBe<T>; // Call other routes and return routing results, generally used to reuse routing logic
+     redirect: (url: string, query?: IJson, header?: IJson) => void, // Route redirection (302)
 }
 ```
 
 ### meta
 
-Meta has been introduced in the previous article, mainly used to write the meta information of the route for use in itself or other hooks
+Meta has been introduced in the previous article. The meta in the helper is used to obtain the meta information of the current route.
 
 ```js
 const router = new Router({
-     '/test': ({meta, index, route}) => {},
+     '[db]/test': ({meta}) => {
+         return {data: meta};
+     },
+});
+```
+
+### params
+
+params has been introduced in the previous article. The params in the helper are used to obtain the parameters of the current route.
+
+```js
+const router = new Router({
+     '/test/:id': ({params}) => {
+         return {data: params};
+     },
 });
 ```
 
 ### route
 
-The route method is used to redirect to other routes or call other requests to get the return result. This method can access private routes
+The route method is used to call other routes to get the returned results. This method can access private routes.
 
 ```js
 const router = new Router({
@@ -168,8 +228,21 @@ const router = new Router({
      },
      '/route-test2': ({route}) => {
          const data = route('/route-test');
-         // ... do something
+         // ...do something
          return {data};
+     },
+});
+```
+
+### redirect
+
+The redirect method is used for route redirection.
+
+```js
+const router = new Router({
+     '/test1': () => {return {data: 'test1'}},
+     '/test2': ({redirect}) => {
+         return redirect('/test1')
      },
 });
 ```

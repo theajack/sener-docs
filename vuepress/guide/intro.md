@@ -50,15 +50,14 @@
 ## 1 Introduction
 
 Sener is a simple, efficient, powerful, and highly scalable nodejs web server framework
+The core of Sener is a simple http server. With built-in request and response parsing and a highly flexible middleware system, developers can develop feature-rich and powerful web applications based on Sener.
 
-The core of Sener is a simple http server, with built-in request and response parsing and highly flexible middleware system, developers can develop feature-rich and powerful web applications based on Sener
-
-[Feedback issues](https://github.com/theajack/sener/issues/new)
+[Feedback Issues](https://github.com/theajack/sener/issues/new)
 
 ## 2. Features
 
-1. Simple and efficient architecture, full ts writing, highly friendly ts statement support
-2. Support highly customized and highly scalable middleware system, adopt the onion model, rich routing hooks
+1. Simple and efficient architecture, fully written in TS, highly friendly TS declaration support
+2. Supports a highly customized and highly scalable middleware system, using the onion model and rich routing hooks
 
 ## 3. Middleware
 

@@ -2,8 +2,8 @@
   * @Author: chenzhongsheng
   * @Date: 2022-10-30 02:42:04
   * @Description: Coding something
-  * @LastEditors: Please set LastEditors
-  * @LastEditTime: 2023-05-13 17:04:03
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-05-29 00:03:18
 -->
 
 ## 1. npm install
@@ -51,8 +51,8 @@ import { RPC } from 'sener-rpc';
 new Sener({
    port: 9000,
    middlewares: [
-     new Router({}), // It is recommended that the router be placed first in the middleware
-     new Cookie(), // cookie needs to be before session
+     new Router({}),
+     new Cookie(),
      new Session(),
      new Json(),
      new Static(),

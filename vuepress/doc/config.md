@@ -47,15 +47,11 @@ type IConfigChange = (data: {
    key: string, value: any, prev: any
 }) => void;
 
-interface IInitialConfigData {
-     filename: string;
-     data: Record<string, any>;
-}
 interface IConfigOptions {
-     dir?: string, // The storage directory of the configuration file is 'config' by default, which is {Sener.Dir}/config
+     dir?: string, // The storage directory of the configuration file. The default is 'config', which is {Sener.Dir}/config
      format?: boolean, // Whether to format the configuration file, the default is true
-     initial?: IInitialConfigData[], // initial configuration data
-     onchange?: IConfigChange; // callback function for configuration data change
+     initial?: Record<string, Record<string, any>>, // Initial configuration data. The default value is {_default: {}}
+     onchange?: IConfigChange; // Callback function for configuration data changes
 }
 ```
 
@@ -68,19 +64,15 @@ The initial configuration data is a piece of data, the element contains filename
 ```js
 
 new Config({
-     initial: [{
-         filename: 'user', // user profile, stored as user.json
-         data: {
-             showImage: true, // Configure whether to display the avatar
-             maxVisitors: 999, // Configure the maximum visible visitors
-         }
-     }, {
-         filename: 'goods', // Product configuration file, stored as goods.json
-         data: {
-             maxPrice: 9999,
-             //...
-         }
-     }]
+    //User configuration file, stored as user.json
+    user: {
+        showImage: true, // Configure whether to display the avatar
+        maxVisitors: 999, // Configure the maximum visible visitors
+    },
+    goods: { // Product configuration file, stored as goods.json
+        maxPrice: 9999,
+        // ...
+    }
 });
 ```
 
